@@ -24,12 +24,20 @@ $("#excel").click(function() {
           }
       });        
 });
-$("#pdf").click(function() {        
+$("#pdf").click(function() {
+  let fileName =  prompt("Save File as")
       $.ajax({
           url: 'components/pdf.cfc?method=getPdf',
           type: 'POST',
           success: function(result) {
-              
+            let jsonObj = JSON.parse(result);
+            alert(result)
+            let a = document.createElement("a");
+
+             a.download = fileName;
+         //   a.setAttribute('download', fileName+".pdf");
+            a.href = jsonObj;
+            a.click();
           },
           error: function() {
               
@@ -344,13 +352,4 @@ function createContact()
 function printContact()
 {
 	window.print();
-}
-
-function download(url) {
-  const a = document.createElement('a')
-  a.href = url
-  a.download = url.split('/').pop()
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
 }

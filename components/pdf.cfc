@@ -1,11 +1,12 @@
 <cfcomponent >
-   <cffunction name="getPdf" access="remote">
+   <cffunction name="getPdf" access="remote" returntype="string" returnformat="JSON">
       <!--- Fetch data from the database --->
       <cfquery name="getContacts" datasource="#application.datasource#">        
             SELECT contactId,title,firstName,lastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber FROM Contact WHERE _createdBy = <cfqueryparam value = #session.userName# cfsqltype="cf_sql_varchar">      
       </cfquery>
       <cfset local.fileName = createUUID() & ".pdf">
-      <cfset local.pdfFilePath = expandPath("../ExcelFiles/"&local.fileName)>
+      <cfset local.pdfFilePath = "../ExcelFiles/"&local.fileName>
+      <cfset local.fileForDownload = "./ExcelFiles/"&local.fileName>
 
 <!--- Generate PDF --->
       <cfdocument format="PDF" 
@@ -53,6 +54,7 @@
                   </cfoutput>
             </tbody>
          </table>
-      </cfdocument>      
+      </cfdocument>
+      <cfreturn local.fileForDownload>
    </cffunction>
 </cfcomponent>

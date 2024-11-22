@@ -27,7 +27,7 @@
    </header>	
 	<main>
 		<div class="exportOption">
-			<a id="pdf" href=""><img src="./Images/pdf.png" alt="pdf" width="36"></a>
+			<a id="pdf" href="##"><img src="./Images/pdf.png" alt="pdf" width="36"></a>
 			<a id="excel"><img src="./Images/excel.png" alt="excel" width="36"></a>
 			<a onclick="printContact()"><img src="./Images/printer.png" alt="printer" width="36"></a>
 		</div>
