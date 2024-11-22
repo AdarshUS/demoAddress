@@ -27,9 +27,9 @@
    </header>	
 	<main>
 		<div class="exportOption">
-			<button id="pdf"><img src="./Images/pdf.png" alt="pdf" width="36"></button>
-			<button id="excel"><img src="./Images/excel.png" alt="excel" width="36"></button>
-			<button onclick="printContact()"><img src="./Images/printer.png" alt="printer" width="36"></button>
+			<a id="pdf" href=""><img src="./Images/pdf.png" alt="pdf" width="36"></a>
+			<a id="excel"><img src="./Images/excel.png" alt="excel" width="36"></a>
+			<a onclick="printContact()"><img src="./Images/printer.png" alt="printer" width="36"></a>
 		</div>
 		<div class="contact_profileContainer">
 			<div class="profileContainer d-flex flex-column align-items-center">								
@@ -176,38 +176,38 @@
 									<div class="formContainer w-80 d-flex flex-column">										
 										<div class="createContactText" >CONTACT DETAILS</div>
 										<div>
-											<div>
-											<span>Name</span>
+											<div class="cnt_details">
+											<span class="cnt_heading">Name</span>
 											<span>:</span>
 											<span id="cntName"></span>										
 										</div>
-										<div>
-											<span>Gender</span>
+										<div class="cnt_details">
+											<span class="cnt_heading">Gender</span>
 											<span>:</span>
 											<span id="cntGender"></span>	
 										</div>
-										<div>
-											<span>Date Of Birth</span>
+										<div class="cnt_details">
+											<span class="cnt_heading">Date Of Birth</span>
 											<span>:</span>
 											<span id="cntDob"></span>	
 										</div>
-										<div>
-											<span>Address</span>
+										<div class="cnt_details">
+											<span class="cnt_heading">Address</span>
 											<span>:</span>
 											<span id="cntAddress"></span>	
 										</div>
-										<div>
-											<span>Pincode</span>
+										<div class="cnt_details">
+											<span class="cnt_heading">Pincode</span>
 											<span>:</span>
 											<span id="cntPincode"></span>	
 										</div>
-										<div>
-											<span>Email Id</span>
+										<div class="cnt_details">
+											<span class="cnt_heading">Email Id</span>
 											<span>:</span>
 											<span id="cntMail"></span>	
 										</div>
-										<div>
-											<span>Phone</span>
+										<div class="cnt_details">
+											<span class="cnt_heading">Phone</span>
 											<span>:</span>
 											<span id="cntPhone"></span>	
 										</div>																		

@@ -193,10 +193,16 @@ input,select{
   border-radius: 50%;
 }
 
-.profile{
-  
+.cnt_heading{
+  color:#337ab9;
+  font-weight: bold;
 }
 
+.cnt_details{  
+  width: 71%;
+  display: flex;
+  justify-content: space-between;
+}
 
 .editBtn,.deleteBtn,.viewBtn{
   padding: 8px 19px;
