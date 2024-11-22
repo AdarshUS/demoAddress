@@ -19,21 +19,21 @@
          </div>
       </div>
       <div class="headerItem2">
-      	<div class="headerItem2_log1">
+      	<button class="headerItem2_log1" id="logout">
       	    <i class="fa-solid fa-right-from-bracket"></i>
       	    <span>Logout</span>
-      	</div>         
+      	</button>         
       </div>
    </header>	
 	<main>
 		<div class="exportOption">
-			<img src="./Images/pdf.png" alt="pdf" width="36">
-			<img src="./Images/excel.png" alt="excel" width="36">
-			<img src="./Images/printer.png" alt="printer" width="36">
+			<button id="pdf"><img src="./Images/pdf.png" alt="pdf" width="36"></button>
+			<button id="excel"><img src="./Images/excel.png" alt="excel" width="36"></button>
+			<button onclick="printContact()"><img src="./Images/printer.png" alt="printer" width="36"></button>
 		</div>
 		<div class="contact_profileContainer">
 			<div class="profileContainer d-flex flex-column align-items-center">								
-				<img src="#session.profilePhoto#" alt="profilepic" width="100">
+				<img src="#session.profilePhoto#" alt="profilepic" width="70" height="70">
 				<div class="profileName">#session.fullName#</div>
 				<button class="createCntBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" type="button" onclick="createContact()">CREATE CONTACT</button>
 				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -155,7 +155,7 @@
 											</table>										
 										</div>
 									<div class="profileIconContainer d-flex justify-content-center align-items-start">
-										<img src="./Images/profile.png" alt="profile" width="90">									
+										<img src="./Images/profile.png" alt="profile" width="90" height="90">									
 									</div>							
 								</div>						
 							</div>
@@ -214,7 +214,7 @@
 									</div>												
 								</div>
 									<div class="profileIconContainer d-flex justify-content-center align-items-start">
-										<img src="./Images/profile.png" alt="profile" width="90">									
+										<img src="" alt="profile" width="90" id="profile">									
 									</div>
 								</div>	
 							</div>
@@ -250,22 +250,22 @@
 					</tr>
 					<cfloop query="#local.AllContacts#">
 					<tr>
-						<td><img src="#local.AllContacts.photo#" alt="profile" width="70"></td>
+						<td><img src="#local.AllContacts.photo#" alt="profile" width="70" height="70" class="prof_pic"></td>
 						<td>#local.AllContacts.firstName#</td>
 						<td>#local.AllContacts.emailId#</td>
 						<td>#local.AllContacts.phoneNumber#</td>
-						<td><button class="contactBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#local.AllContacts.contactId#" onclick="editContact(this)">EDIT</button></td>
-						<td><button class="contactBtn" onclick="deleteContact(this)" value="#local.AllContacts.contactId#">DELETE</button></td>
-						<td><button class="contactBtn" data-bs-toggle="modal" data-bs-target="##exampleModal2" value="#local.AllContacts.contactId#" onclick="viewData(this)">VIEW</button></td>
+						<td><button class="editBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#local.AllContacts.contactId#" onclick="editContact(this)">EDIT</button></td>
+						<td><button class="deleteBtn" onclick="deleteContact(this)" value="#local.AllContacts.contactId#">DELETE</button></td>
+						<td><button class="viewBtn" data-bs-toggle="modal" data-bs-target="##exampleModal2" value="#local.AllContacts.contactId#" onclick="viewData(this)">VIEW</button></td>
 					</tr>
 					</cfloop>
 				</table>
 			</div>
 		</div>		
 	</main>
-	</cfoutput>
-	<script src="./script/script.js"></script>
+	</cfoutput>	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>	
+	<script src="./script/script.js"></script>
 </body>
 </html>

@@ -28,6 +28,12 @@ header{
   color: #fff;
 }
 
+.headerItem2_log1{
+  background-color: transparent;
+  border: none;
+  padding: 0 20px;
+}
+
 .headerItem2 div{
   padding: 0 20px;
 }
@@ -117,6 +123,10 @@ th{
   color: #337ab9;
 }
 
+.cntTable{
+  width: 100%;
+}
+
 input,select{
   border: none;
   border-top: 1px solid #eee;
@@ -157,6 +167,7 @@ input,select{
   border: 2px solid #337ab9;
   padding: 6px 30px;
   border-radius: 20px;
+  margin-top: 44px;
 }
 
 .cntTable tr{
@@ -165,6 +176,46 @@ input,select{
 
 .error{
   color: red;
+}
+
+.exportOption button{
+  background-color: transparent;
+  border: none;
+}
+
+.profileContainer img{
+  border-radius: 50%;
+  display: inline-block;
+  margin: 18px;
+}
+
+.prof_pic{
+  border-radius: 50%;
+}
+
+.profile{
+  
+}
+
+
+.editBtn,.deleteBtn,.viewBtn{
+  padding: 8px 19px;
+  background-color: #fff;
+  border-radius: 22px;
+  color:#337ab9;
+  border: 1px solid #337ab9;
+}
+
+@media print{
+  header{
+    display: none;    
+  }
+  .exportOption{
+    display: none;    
+  }
+  .profileContainer{
+    display: none;
+  }
 }
 
 
