@@ -1,0 +1,175 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background-color: #eaf1fb;
+}
+
+header{
+  background-color: #337ab9;
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerItem1Text{
+  color: #fff;
+}
+
+.headerItem1,.headerItem2{
+  display: flex;
+  align-items: center;
+}
+
+.headerItem2_log1,.headerItem2_log2{
+  color: #fff;
+}
+
+.headerItem2 div{
+  padding: 0 20px;
+}
+
+main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center
+}
+
+.exportOption{
+  display: flex;
+  justify-content: flex-end;
+  width: 80%;
+  background-color: #fff;
+  height: 70px;
+  align-items: center;
+  margin: 30px;
+}
+
+.exportOption img{
+  display: inline-block;
+  margin: 0 15px;
+}
+
+.contact_profileContainer{
+  width: 80%;
+  display: flex;
+}
+
+.profileContainer{
+  width: 16%;
+  background-color: #fff;
+  height: 222px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contactContainer{
+  background-color: #fff;
+  width: 84%; 
+}
+
+.profileName{
+  color: #337ab9;
+  font-size: 23px;
+  font-weight: 800;
+  padding: 10px;
+}
+
+.createCntBtn{
+  background-color: #337ab9;
+  border: none;
+  color: #fff;
+  padding: 7px 12px;
+  border-radius: 15px;
+}
+
+.contactContainer th{
+  color: #337ab9;
+}
+
+.createContactText{
+  background-color: #d1e4fb;
+  color: #1c1c69;
+  font-size: 20px;
+  text-align: center;
+}
+
+.modal-content{
+  width: 600px;  
+}
+
+.required:after {
+  content:" *";
+  color: #337ab9;
+}
+
+table th,td{
+  padding: 10px;
+}
+
+th{
+  color: #337ab9;
+}
+
+input,select{
+  border: none;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #9b9898;
+  padding: 5px;
+}
+
+.personalCntTable{
+  border-top: 2px solid #1c1c69;
+}
+
+.profileIconContainer{
+  background-color: azure;
+}
+
+.personalCntText,.cntDetailsText{
+  color: #337ab9;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 30px 30px 0px 30px;
+}
+
+.inputPhoto{
+  width: 60%;
+}
+
+.formContainer{
+  width: 80%;
+}
+
+.profileIconContainer{
+  width: 20%;
+}
+
+.contactBtn{
+  color: #337ab9;
+  background-color: #fff;
+  border: 2px solid #337ab9;
+  padding: 6px 30px;
+  border-radius: 20px;
+}
+
+.cntTable tr{
+  border-bottom: 1px solid #eee;
+}
+
+.error{
+  color: red;
+}
+
+
+
+
+
+
+
