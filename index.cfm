@@ -16,14 +16,14 @@
          </div>
       </div>
       <div class="headerItem2">
-         <div class="headerItem2_log1">
+         <a class="headerItem2_log1" href="./signUp.cfm">
              <i class="fa-solid fa-user"></i>
              <span>Sign Up</span>
-         </div>
-          <div class="headerItem2_log2">
+         </a>
+          <a class="headerItem2_log2" href="#">
              <i class="fa-solid fa-right-to-bracket"></i>
              <span>Login</span>
-         </div>        
+         </a>        
       </div>
    </header>
    <main>

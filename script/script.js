@@ -1,5 +1,49 @@
+$("#logout").click(function() {
+        if (confirm("Are you sure you want to Logout")) {
+            $.ajax({
+                url: 'components/logOut.cfc?method=logOutUser',
+                type: 'POST',
+                success: function(result) {
+                    window.location.href = "index.cfm";
+                },
+                error: function() {
+                    
+                }
+            });
+        }
+});
+$("#excel").click(function() {        
+      $.ajax({
+          url: 'components/Excel.cfc?method=getExcel',
+          type: 'POST',
+          success: function(result) {
+              
+          },
+          error: function() {
+              
+          }
+      });        
+});
+$("#pdf").click(function() {
+  let fileName =  prompt("Save File as")
+      $.ajax({
+          url: 'components/pdf.cfc?method=getPdf',
+          type: 'POST',
+          success: function(result) {
+            let jsonObj = JSON.parse(result);
+            alert(result)
+            let a = document.createElement("a");
 
-
+             a.download = fileName;
+         //   a.setAttribute('download', fileName+".pdf");
+            a.href = jsonObj;
+            a.click();
+          },
+          error: function() {
+              
+          }
+      });        
+});
 function validate()
 {
 	let validInput = true;
@@ -84,11 +128,6 @@ function validate()
 	return validInput;
 }
 
-function validateContact()
-{
-	
-}
-
 function viewData(contactId)
 {
 	$.ajax({
@@ -97,6 +136,7 @@ function viewData(contactId)
    	 data: {contactId:contactId.value},
    	 success: function(result) {
 		 jsonObj = JSON.parse(result);
+		 alert(jsonObj.PHOTO)
 		 document.getElementById("cntName").textContent = jsonObj.FIRSTNAME;
 		 document.getElementById("cntGender").textContent = jsonObj.GENDER;
 		 document.getElementById("cntDob").textContent = jsonObj.DATEOFBIRTH;
@@ -104,6 +144,7 @@ function viewData(contactId)
 		 document.getElementById("cntPincode").textContent = jsonObj.PINCODE;
 		 document.getElementById("cntMail").textContent = jsonObj.EMAILID;
 		 document.getElementById("cntPhone").textContent = jsonObj.PHONENUMBER;
+		 document.getElementById("profile").src = jsonObj.PHOTO;
    	 },
    	 error: function() {
 		
@@ -112,20 +153,22 @@ function viewData(contactId)
 }
 
 function deleteContact(contactId)
-{	
-	$.ajax({		
+{
+	if (confirm("Are you sure you want to delete"))
+	{
+		$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=deleteContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
-   	 success: function(returnValue) {	
-		//  alert()
-
+   	 success: function(returnValue) {
 			location.reload();
    	 },
    	 error: function() {
 		
    	 }
       });
+	}
+	
 }
 
 // $(document).ready(function() {
@@ -304,4 +347,9 @@ function createContact()
 {
 	document.getElementById("createContactText").innerHTML = "CREATE CONTACT";
 	document.getElementById("form").reset();
+}
+
+function printContact()
+{
+	window.print();
 }

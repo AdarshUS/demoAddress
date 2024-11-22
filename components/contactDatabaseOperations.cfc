@@ -46,7 +46,7 @@
    <cffunction name="fetchContacts" access="public" returntype="query">
       <cftry>
          <cfquery name="getContacts" datasource="#application.datasource#">
-            SELECT contactId,title,firstName,lastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber FROM Contact                     
+            SELECT contactId,title,firstName,lastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber FROM Contact WHERE _createdBy = <cfqueryparam  value="#session.userName#">
          </cfquery>
       <cfcatch type="any">                        
       </cfcatch>              
@@ -59,7 +59,6 @@
       <cfset local.structContact = structNew()>
       <cfquery name="fetchAcontact" datasource="#application.datasource#">
          SELECT contactId,title,firstName,lastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber from Contact WHERE contactId = <cfqueryparam value="#arguments.contactId#">
-
       </cfquery>
       <cfset session.contactId = fetchAcontact.contactId>       
        <cfset var colname = "">            

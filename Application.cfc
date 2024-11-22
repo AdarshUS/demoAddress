@@ -6,4 +6,16 @@
       <cfset application.datasource = "cf_tutorial">
       <cfreturn true>
    </cffunction>
+
+   <cffunction  name="onrequest" returntype="any">
+    <cfargument name="requestpage">        
+    <cfset local.arrayExclude = ["/AddressBook/index.cfm","/AddressBook/signUp.cfm"]>
+    <cfif arrayContains(local.arrayExclude,arguments.requestpage)>
+      <cfinclude  template="#arguments.requestpage#">
+    <cfelseif structKeyExists(session, "userName")>
+      <cfinclude  template="#arguments.requestpage#">
+    <cfelse>
+      <cfinclude  template="./index.cfm">
+    </cfif>
+  </cffunction>
 </cfcomponent>
