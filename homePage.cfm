@@ -32,7 +32,7 @@
 			<a onclick="printContact()"><img src="./Images/printer.png" alt="printer" width="36"></a>
 		</div>
 		<div class="contact_profileContainer">
-			<div class="profileContainer d-flex flex-column align-items-center">								
+			<div class="profileContainer">								
 				<img src="#session.profilePhoto#" alt="profilepic" width="70" height="70">
 				<div class="profileName">#session.fullName#</div>
 				<button class="createCntBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" type="button" onclick="createContact()">CREATE CONTACT</button>
@@ -230,10 +230,14 @@
 					<cfset local.result = local.cntDatabaseObj.editContact(form.distinguishButtons,form.title,form.firstName,form.lastName,form.gender,form.dob,form.photo,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>
 				<cfelse>
 					<cfset local.uploadRelativePath = "./Images/Uploads/">
-				<cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
-				<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>				
-				<cfset local.result = local.cntDatabaseObj.createContact(form.title,form.firstName,form.lastName,form.gender,form.dob,local.imagePath,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>
-				<cflocation  url="./homePage.cfm">
+					<cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
+					<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>				
+					<cfset local.result = local.cntDatabaseObj.createContact(form.title,form.firstName,form.lastName,form.gender,form.dob,local.imagePath,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>					
+					<cfif NOT local.result>
+						<p>Contact Already Exists</p>
+					<cfelse>
+						<cflocation  url="./homePage.cfm">
+					</cfif>					
 				</cfif>																			
 			</cfif>
 			<cfset local.AllContacts = local.cntDatabaseObj.fetchContacts()>	

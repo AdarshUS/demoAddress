@@ -8,7 +8,20 @@
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
       <cftry> 	
 			<cfquery name="insertData" datasource="#application.datasource#">
-				INSERT INTO Users(fullName,emailId,userName,password,profilePhoto) VALUES('#arguments.fullName#','#arguments.emailId#','#arguments.userName#','#local.password#','#arguments.profilePhoto#')					
+				INSERT INTO Users (
+	fullName
+	,emailId
+	,userName
+	,password
+	,profilePhoto
+	)
+VALUES (
+	'#arguments.fullName#'
+	,'#arguments.emailId#'
+	,'#arguments.userName#'
+	,'#local.password#'
+	,'#arguments.profilePhoto#'
+	)					
 			</cfquery>
 		<cfcatch type="any">
 			<cfreturn false>			
@@ -22,7 +35,14 @@
 		<cfargument name="password" type="string" required="true">
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
 		<cfquery name="verifyUser" datasource="#application.datasource#">
-			SELECT fullName,emailId,userName,password,profilePhoto from Users where userName = <cfqueryparam value="#arguments.userName#" cfsqltype="varchar"> AND password = <cfqueryparam value="#local.password#" cfsqltype="varchar">					
+			SELECT fullName
+	,emailId
+	,userName
+	,password
+	,profilePhoto
+FROM Users
+WHERE userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
+	AND password = < cfqueryparam value = "#local.password#" cfsqltype = "varchar" >				
 		</cfquery>		
 		<cfreturn verifyUser>		
 	</cffunction>
