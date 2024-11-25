@@ -26,6 +26,13 @@ header{
 
 .headerItem2_log1,.headerItem2_log2{
   color: #fff;
+  display: inline-block;
+  margin: 0 10px;
+  text-decoration: none;  
+}
+
+.headerItem2_log1:hover,.headerItem2_log2:hover{
+  color: #fff;
 }
 
 .headerItem2 div{

@@ -6,7 +6,7 @@
 
 body{
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  background-color: azure;
+  background-color: #f0ffff;
 }
 
 header{
@@ -25,7 +25,15 @@ header{
 }
 
 .headerItem2_log1,.headerItem2_log2{
+  display: inline-block;
+  margin: 0 10px;
+  text-decoration: none;
   color: #fff;
+}
+
+.headerItem2_log1{
+  background-color: transparent;
+  border: none;
 }
 
 .headerItem2 div{
@@ -119,4 +127,9 @@ input{
 
 .error{
   color: #ff0000;
+}
+
+.exportOption button{
+  background-color: transparent;
+  border: none;  
 }
