@@ -9,7 +9,7 @@
 
    <cffunction  name="onrequest" returntype="any">
     <cfargument name="requestpage">        
-    <cfset local.arrayExclude = ["/AddressBook/index.cfm","/AddressBook/signUp.cfm"]>
+    <cfset local.arrayExclude = ["/index.cfm","/signUp.cfm"]>
     <cfif arrayContains(local.arrayExclude,arguments.requestpage)>
       <cfinclude  template="#arguments.requestpage#">
     <cfelseif structKeyExists(session, "userName")>

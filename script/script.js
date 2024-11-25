@@ -12,12 +12,20 @@ $("#logout").click(function() {
             });
         }
 });
-$("#excel").click(function() {        
+$("#excel").click(function() {     
+	let fileName =  prompt("Save File as")   
       $.ajax({
           url: 'components/Excel.cfc?method=getExcel',
           type: 'POST',
           success: function(result) {
-              
+				if(fileName != "")
+				{
+					let jsonObj = JSON.parse(result);          
+					let a = document.createElement("a");
+					a.download = fileName;      
+					a.href = jsonObj;
+					a.click();
+				}				              
           },
           error: function() {
               
@@ -30,17 +38,18 @@ $("#pdf").click(function() {
           url: 'components/pdf.cfc?method=getPdf',
           type: 'POST',
           success: function(result) {
-            let jsonObj = JSON.parse(result);
-            alert(result)
-            let a = document.createElement("a");
-
-             a.download = fileName;
-         //   a.setAttribute('download', fileName+".pdf");
-            a.href = jsonObj;
-            a.click();
+				alert(result)
+				if(fileName != "")
+				{
+					let jsonObj = JSON.parse(result);          
+					let a = document.createElement("a");
+					a.download = fileName;      
+					a.href = jsonObj;
+					a.click();
+				}
+            
           },
-          error: function() {
-              
+          error: function() {              
           }
       });        
 });
@@ -135,8 +144,7 @@ function viewData(contactId)
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(result) {
-		 jsonObj = JSON.parse(result);
-		 alert(jsonObj.PHOTO)
+		 jsonObj = JSON.parse(result);		 
 		 document.getElementById("cntName").textContent = jsonObj.FIRSTNAME;
 		 document.getElementById("cntGender").textContent = jsonObj.GENDER;
 		 document.getElementById("cntDob").textContent = jsonObj.DATEOFBIRTH;
@@ -171,25 +179,6 @@ function deleteContact(contactId)
 	
 }
 
-// $(document).ready(function() {
-// 	$('form').on('submit', function(e) {
-// 			e.preventDefault();
-
-// 			let formdata = $(this).serialize();
-// 			$.ajax({
-// 					url: 'components/contactDatabaseOperations.cfc?method=createContact',
-// 					type: 'POST',
-// 					data: formdata,
-// 					success: function(returnValue) {
-// 							alert();
-// 							location.reload();
-// 					},
-// 					error: function() {
-							
-// 					}
-// 			});
-// 	});
-// });
 function validateContact()
 {
 	let title = document.getElementById("title").value;	
@@ -306,7 +295,7 @@ function validateContact()
 		phoneError.innerHTML = "cannot be empty"
 		validInput = false;
 	}
-	 alert(validInput);
+	
 	return validInput;
 }
 
@@ -317,14 +306,12 @@ function editContact(contactId)
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(returnValue) {
-			jsonObj = JSON.parse(returnValue);
-		 	console.log(jsonObj)
+			jsonObj = JSON.parse(returnValue);		 	
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
 			document.getElementById("gender").value = jsonObj.GENDER;
-			document.getElementById("dob").value = jsonObj.DATEOFBIRTH;
-			// document.getElementById("photo").value = jsonObj.PHOTO;
+			document.getElementById("dob").value = jsonObj.DATEOFBIRTH;			
 			document.getElementById("address").value = jsonObj.ADDRESS;
 			document.getElementById("street").value = jsonObj.STREET;
 			document.getElementById("district").value = jsonObj.DISTRICT;
@@ -337,8 +324,7 @@ function editContact(contactId)
 			document.getElementById("createContactText").innerHTML = "EDIT CONTACT";
 			document.getElementById("submit").innerHTML = "Save Changes";
    	 },
-   	 error: function() {
-		
+   	 error: function() {		
    	 }
       });
 }

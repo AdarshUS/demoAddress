@@ -212,14 +212,26 @@ input,select{
   border: 1px solid #337ab9;
 }
 
+.exportOption a{
+  cursor: pointer;
+}
+
 @media print{
-  header{
+   header{
     display: none;    
   }
   .exportOption{
     display: none;    
   }
   .profileContainer{
+   display: none;
+  }
+  .contactContainer{
+   
+    border: 1px solid #e99191;
+    width: 100%;
+  }  
+  .editBtn,.deleteBtn,.viewBtn{
     display: none;
   }
 }
