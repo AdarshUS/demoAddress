@@ -4,7 +4,7 @@ $("#logout").click(function() {
                 url: 'components/logOut.cfc?method=logOutUser',
                 type: 'POST',
                 success: function(result) {
-                    window.location.href = "index.cfm";
+                  location.reload();
                 },
                 error: function() {
                     
@@ -89,8 +89,8 @@ function validate()
 	{
 		mailError.textContent = "Invalid mail";
 		validInput = false;
-	}
-
+	}		
+	
 	if(userName.trim() === "")
 	{
 		usernameError.textContent = "Username cannot be empty";
@@ -100,6 +100,19 @@ function validate()
 	{
 		usernameError.textContent = "Invalid Username";
 		validInput = false;
+	}
+	else
+	{
+		 $.ajax({
+          url: 'components/userDatabaseOperations.cfc?method=verifyEmail',
+          type: 'POST',
+			 data: {email:email},
+          success: function(result) {
+				mailError.textContent = "Email Already Exist";
+          },
+          error: function() {              
+          }
+      });        
 	}
 
 	if(password.trim() === "")
@@ -301,6 +314,36 @@ function validateContact()
 
 function editContact(contactId)
 {
+	let titleError = document.getElementById("titleError");
+	let firstNameError = document.getElementById("firstNameError");
+	let lastNameError = document.getElementById("lastNameError");
+	let genderError = document.getElementById("genderError");
+	let dateOfBirthError = document.getElementById("dobError");
+	let photoError = document.getElementById("photoError");
+	let addressError = document.getElementById("addressError");
+	let streetError = document.getElementById("streetError");
+	let districtError = document.getElementById("districtError");
+	let stateError = document.getElementById("stateError");
+	let nationalityError = document.getElementById("nationalityError");
+	let pincodeError = document.getElementById("pincodeError");
+	let emailError = document.getElementById("emailError");
+	let phoneError = document.getElementById("phoneError");
+
+	titleError.innerHTML = "";
+	firstNameError.innerHTML = "";
+	lastNameError.innerHTML = "";
+	genderError.innerHTML = "";
+	dateOfBirthError.innerHTML = "";
+	photoError.innerHTML = "";
+	addressError.innerHTML = "";
+	streetError.innerHTML = "";
+	districtError.innerHTML = "";
+	stateError.innerHTML = "";
+	nationalityError.innerHTML = "";
+	pincodeError.innerHTML = "";
+	emailError.innerHTML = "";
+	phoneError.innerHTML = "";
+
 	$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',

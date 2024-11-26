@@ -13,8 +13,7 @@
       <cfargument name="nationality" type="string" required="true">
       <cfargument name="pinCode" type="string" required="true">
       <cfargument name="email" type="string" required="true">
-      <cfargument name="phone" type="string" required="true">
-   
+      <cfargument name="phone" type="string" required="true">   
       <cftry>
          <cfquery name="insertContact" datasource="#application.datasource#">
             INSERT INTO Contact (
@@ -34,26 +33,25 @@
                ,phoneNumber
                ,_createdBy
                ,_updatedBy
-	)
-VALUES (
-	< cfqueryparam value = "#arguments.title#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.firstName#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.lastName#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.gender#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.dateOfBirth#" cfsqltype = "date" >
-	,< cfqueryparam value = "#arguments.photo#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.Address#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.street#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.district#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.state#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.nationality#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.pinCode#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.email#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#arguments.phone#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#session.userName#" cfsqltype = "varchar" >
-	,< cfqueryparam value = "#session.userName#" cfsqltype = "varchar" >
-	)
-
+	                           )
+               VALUES (
+                  < cfqueryparam value = "#arguments.title#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.firstName#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.lastName#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.gender#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.dateOfBirth#" cfsqltype = "date" >
+                  ,< cfqueryparam value = "#arguments.photo#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.Address#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.street#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.district#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.state#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.nationality#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.pinCode#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.email#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#arguments.phone#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#session.userName#" cfsqltype = "varchar" >
+                  ,< cfqueryparam value = "#session.userName#" cfsqltype = "varchar" >
+                  )
          </cfquery>
       <cfcatch type="any">
          <cfreturn false>               
@@ -66,23 +64,22 @@ VALUES (
       <cftry>
          <cfquery name="getContacts" datasource="#application.datasource#">
            SELECT contactId
-	,title
-	,firstName
-	,lastName
-	,gender
-	,dateOfBirth
-	,photo
-	,Address
-	,street
-	,district
-	,STATE
-	,nationality
-	,pinCode
-	,emailId
-	,phoneNumber
-FROM Contact
-WHERE _createdBy = < cfqueryparam value = "#session.userName#" >
-
+                  ,title
+                  ,firstName
+                  ,lastName
+                  ,gender
+                  ,dateOfBirth
+                  ,photo
+                  ,Address
+                  ,street
+                  ,district
+                  ,STATE
+                  ,nationality
+                  ,pinCode
+                  ,emailId
+                  ,phoneNumber
+            FROM Contact
+            WHERE _createdBy = < cfqueryparam value = "#session.userName#" >
          </cfquery>
       <cfcatch type="any">                        
       </cfcatch>              
@@ -95,23 +92,22 @@ WHERE _createdBy = < cfqueryparam value = "#session.userName#" >
       <cfset local.structContact = structNew()>
       <cfquery name="fetchAcontact" datasource="#application.datasource#">
          SELECT contactId
-	,title
-	,firstName
-	,lastName
-	,gender
-	,dateOfBirth
-	,photo
-	,Address
-	,street
-	,district
-	,STATE
-	,nationality
-	,pinCode
-	,emailId
-	,phoneNumber
-FROM Contact
-WHERE contactId = < cfqueryparam value = "#arguments.contactId#" >
-
+                ,title
+                ,firstName
+                ,lastName
+                ,gender
+                ,dateOfBirth
+                ,photo
+                ,Address
+                ,street
+                ,district
+                ,STATE
+                ,nationality
+                ,pinCode
+                ,emailId
+                ,phoneNumber
+         FROM Contact
+         WHERE contactId = < cfqueryparam value = "#arguments.contactId#" >
       </cfquery>
       <cfset session.contactId = fetchAcontact.contactId>       
        <cfset var colname = "">            
@@ -126,9 +122,8 @@ WHERE contactId = < cfqueryparam value = "#arguments.contactId#" >
       <cfargument name="contactId" type="string" required="true">      
       <cfquery name="deleteContact" datasource="#application.datasource#">
          DELETE
-FROM Contact
-WHERE contactId = < cfqueryparam value = "#arguments.contactId#" cfsqltype = "varchar" >
-             
+         FROM Contact
+         WHERE contactId = < cfqueryparam value = "#arguments.contactId#" cfsqltype = "varchar" >             
       </cfquery>    
    </cffunction>
 
@@ -157,34 +152,30 @@ WHERE contactId = < cfqueryparam value = "#arguments.contactId#" cfsqltype = "va
       <cfelse>
          <cfquery name = "qryPhoto" datasource="#application.datasource#">
             SELECT photo
-FROM contact
-WHERE contactId = < cfqueryparam value = "#session.contactId#" cfsqltype = "cf_sql_varchar" >
+            FROM contact
+            WHERE contactId = < cfqueryparam value = "#session.contactId#" cfsqltype = "cf_sql_varchar" >
          </cfquery>
          <cfset local.photo = qryPhoto.photo>
-      </cfif>  
-      
-
+      </cfif>
       <cfset local.todayDate = dateFormat(now(),"dd-mm-yyy")>
-
       <cfquery name="editContact" datasource="#application.datasource#">
          UPDATE Contact
-SET title = < cfqueryparam value = '#arguments.title#' cfsqltype = "varchar" >
-	,firstName = < cfqueryparam value = '#arguments.firstName#' cfsqltype = "varchar" >
-	,lastName = < cfqueryparam value = "#arguments.lastName#" cfsqltype = "varchar" >
-	,gender = < cfqueryparam value = "#arguments.gender#" cfsqltype = "varchar" >
-	,dateOfBirth = < cfqueryparam value = "#arguments.dateOfBirth#" cfsqltype = "date" >
-	,photo = < cfqueryparam value = "#local.photo#" cfsqltype = "varchar" >
-	,Address = < cfqueryparam value = "#arguments.address#" cfsqltype = "varchar" >
-	,street = < cfqueryparam value = "#arguments.street#" cfsqltype = "varchar" >
-	,district = < cfqueryparam value = "#arguments.district#" cfsqltype = "varchar" >
-	,STATE = < cfqueryparam value = "#arguments.state#" cfsqltype = "varchar" >
-	,nationality = < cfqueryparam value = "#arguments.nationality#" cfsqltype = "varchar" >
-	,pinCode = < cfqueryparam value = "#arguments.pincode#" cfsqltype = "varchar" >
-	,emailId = < cfqueryparam value = "#arguments.emailId#" cfsqltype = "varchar" >
-	,phoneNumber = < cfqueryparam value = "#arguments.phoneNumber#" cfsqltype = "varchar" >
-	,_updatedOn = < cfqueryparam value = "#local.todayDate#" cfsqltype = "cf_sql_date" >
-WHERE contactId = < cfqueryparam value = "#arguments.contactId#" >
-      </cfquery>
-      
+         SET title = < cfqueryparam value = '#arguments.title#' cfsqltype = "varchar" >
+            ,firstName = < cfqueryparam value = '#arguments.firstName#' cfsqltype = "varchar" >
+            ,lastName = < cfqueryparam value = "#arguments.lastName#" cfsqltype = "varchar" >
+            ,gender = < cfqueryparam value = "#arguments.gender#" cfsqltype = "varchar" >
+            ,dateOfBirth = < cfqueryparam value = "#arguments.dateOfBirth#" cfsqltype = "date" >
+            ,photo = < cfqueryparam value = "#local.photo#" cfsqltype = "varchar" >
+            ,Address = < cfqueryparam value = "#arguments.address#" cfsqltype = "varchar" >
+            ,street = < cfqueryparam value = "#arguments.street#" cfsqltype = "varchar" >
+            ,district = < cfqueryparam value = "#arguments.district#" cfsqltype = "varchar" >
+            ,STATE = < cfqueryparam value = "#arguments.state#" cfsqltype = "varchar" >
+            ,nationality = < cfqueryparam value = "#arguments.nationality#" cfsqltype = "varchar" >
+            ,pinCode = < cfqueryparam value = "#arguments.pincode#" cfsqltype = "varchar" >
+            ,emailId = < cfqueryparam value = "#arguments.emailId#" cfsqltype = "varchar" >
+            ,phoneNumber = < cfqueryparam value = "#arguments.phoneNumber#" cfsqltype = "varchar" >
+            ,_updatedOn = < cfqueryparam value = "#local.todayDate#" cfsqltype = "cf_sql_date" >
+         WHERE contactId = < cfqueryparam value = "#arguments.contactId#" >
+      </cfquery>      
    </cffunction>
 </cfcomponent>

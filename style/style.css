@@ -127,6 +127,7 @@ input{
 
 .error{
   color: #ff0000;
+  margin: 11px 130px;
 }
 
 .exportOption button{

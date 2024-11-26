@@ -6,26 +6,36 @@
 		<cfargument name="password" required="true"  type="string" >
 		<cfargument name="profilePhoto" required="true" type="string" >
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
-      <cftry> 	
-			<cfquery name="insertData" datasource="#application.datasource#">
-				INSERT INTO Users (
-	fullName
-	,emailId
-	,userName
-	,password
-	,profilePhoto
-	)
-VALUES (
-	'#arguments.fullName#'
-	,'#arguments.emailId#'
-	,'#arguments.userName#'
-	,'#local.password#'
-	,'#arguments.profilePhoto#'
-	)					
+      <cftry>
+			<cfquery name="verifyEmail" datasource="#application.datasource#">
+			SELECT count(emailId) as count					
+			FROM Users
+			WHERE emailId = < cfqueryparam value = "#arguments.emailId#" cfsqltype = "varchar" >
+				OR userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
 			</cfquery>
-		<cfcatch type="any">
-			<cfreturn false>			
-		</cfcatch>
+			<cfif verifyEmail.count GT 0>
+				<cfreturn false>
+				<cfelse>
+					<cfquery name="insertData" datasource="#application.datasource#">
+				INSERT INTO Users (
+						fullName
+						,emailId
+						,userName
+						,password
+						,profilePhoto
+						)
+				VALUES (
+					'#arguments.fullName#'
+					,'#arguments.emailId#'
+					,'#arguments.userName#'
+					,'#local.password#'
+					,'#arguments.profilePhoto#'
+					)					
+			</cfquery>
+			</cfif>			
+			<cfcatch type="any">
+				<cfreturn false>			
+			</cfcatch>
 		</cftry>
 			<cfreturn true>
 	</cffunction>
@@ -36,14 +46,29 @@ VALUES (
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
 		<cfquery name="verifyUser" datasource="#application.datasource#">
 			SELECT fullName
-	,emailId
-	,userName
-	,password
-	,profilePhoto
-FROM Users
-WHERE userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
-	AND password = < cfqueryparam value = "#local.password#" cfsqltype = "varchar" >				
+					,emailId
+					,userName
+					,password
+					,profilePhoto
+			FROM Users
+			WHERE userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
+			AND password = < cfqueryparam value = "#local.password#" cfsqltype = "varchar" >				
 		</cfquery>		
 		<cfreturn verifyUser>		
+	</cffunction>
+
+	<cffunction name="verifyUsername" access="remote" returntype="boolean" returnformat="plain" >
+		<cfargument name="userName" type="string" required="true" >
+		<cftry>
+			<cfquery>
+			SELECT userName					
+			FROM Users
+			WHERE userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
+			</cfquery>
+		<cfcatch >
+			<cfreturn false>					
+		</cfcatch>
+		</cftry>
+		<cfreturn true>
 	</cffunction>
 </cfcomponent>

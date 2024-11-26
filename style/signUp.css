@@ -112,12 +112,16 @@ input{
 
 .error{
   color: red;
+  margin: 0px 40px;
 }
 
 .added_success{
   color: green;
+   margin: 10px 168px;
 }
 
 .added_failed{
   color: red;
+  margin: 10px 168px;
+
 }

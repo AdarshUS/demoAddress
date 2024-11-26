@@ -234,7 +234,7 @@
 					<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>				
 					<cfset local.result = local.cntDatabaseObj.createContact(form.title,form.firstName,form.lastName,form.gender,form.dob,local.imagePath,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>					
 					<cfif NOT local.result>
-						<p>Contact Already Exists</p>
+						<p>Contact Already Exists</p>						
 					<cfelse>
 						<cflocation  url="./homePage.cfm">
 					</cfif>					
@@ -255,7 +255,7 @@
 					<cfloop query="#local.AllContacts#">
 					<tr>
 						<td><img src="#local.AllContacts.photo#" alt="profile" width="70" height="70" class="prof_pic"></td>
-						<td>#local.AllContacts.firstName#</td>
+						<td>#local.AllContacts.firstName & " "&local.AllContacts.lastName#</td>
 						<td>#local.AllContacts.emailId#</td>
 						<td>#local.AllContacts.phoneNumber#</td>
 						<td><button class="editBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#local.AllContacts.contactId#" onclick="editContact(this)">EDIT</button></td>
