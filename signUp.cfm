@@ -64,6 +64,7 @@
                   <button class="loginBtn" id="submitButton" name="submitButton">REGISTER</button>
                </div>
             </form>
+           
             <cfif structKeyExists(form,"submitButton")>              
                <cfset local.databaseOpObj = new components.userDatabaseOperations()>
                <cfset local.uploadRelativePath = "./Images/Uploads/">
@@ -73,12 +74,13 @@
                <cfif inserted>
                   <p class="added_success">Data Submitted Successfully</p>
                <cfelse>
-                  <p class="added_failed">Data submission Failed</p>
+                  <p class="added_failed">UserName or Email Already Exists</p>
                </cfif>               
             </cfif>
          </div>         
       </div>
    </main>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
    <script src="./script/script.js"></script>
 </body>
 </html>

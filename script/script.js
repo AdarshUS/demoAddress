@@ -4,7 +4,7 @@ $("#logout").click(function() {
                 url: 'components/logOut.cfc?method=logOutUser',
                 type: 'POST',
                 success: function(result) {
-                    window.location.href = "index.cfm";
+                  location.reload();
                 },
                 error: function() {
                     
@@ -12,12 +12,20 @@ $("#logout").click(function() {
             });
         }
 });
-$("#excel").click(function() {        
+$("#excel").click(function() {     
+	let fileName =  prompt("Save File as")   
       $.ajax({
           url: 'components/Excel.cfc?method=getExcel',
           type: 'POST',
           success: function(result) {
-              
+				if(fileName != "")
+				{
+					let jsonObj = JSON.parse(result);          
+					let a = document.createElement("a");
+					a.download = fileName;      
+					a.href = jsonObj;
+					a.click();
+				}				              
           },
           error: function() {
               
@@ -30,17 +38,18 @@ $("#pdf").click(function() {
           url: 'components/pdf.cfc?method=getPdf',
           type: 'POST',
           success: function(result) {
-            let jsonObj = JSON.parse(result);
-            alert(result)
-            let a = document.createElement("a");
-
-             a.download = fileName;
-         //   a.setAttribute('download', fileName+".pdf");
-            a.href = jsonObj;
-            a.click();
+				alert(result)
+				if(fileName != "")
+				{
+					let jsonObj = JSON.parse(result);          
+					let a = document.createElement("a");
+					a.download = fileName;      
+					a.href = jsonObj;
+					a.click();
+				}
+            
           },
-          error: function() {
-              
+          error: function() {              
           }
       });        
 });
@@ -80,8 +89,8 @@ function validate()
 	{
 		mailError.textContent = "Invalid mail";
 		validInput = false;
-	}
-
+	}		
+	
 	if(userName.trim() === "")
 	{
 		usernameError.textContent = "Username cannot be empty";
@@ -91,6 +100,19 @@ function validate()
 	{
 		usernameError.textContent = "Invalid Username";
 		validInput = false;
+	}
+	else
+	{
+		 $.ajax({
+          url: 'components/userDatabaseOperations.cfc?method=verifyEmail',
+          type: 'POST',
+			 data: {email:email},
+          success: function(result) {
+				mailError.textContent = "Email Already Exist";
+          },
+          error: function() {              
+          }
+      });        
 	}
 
 	if(password.trim() === "")
@@ -135,8 +157,7 @@ function viewData(contactId)
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(result) {
-		 jsonObj = JSON.parse(result);
-		 alert(jsonObj.PHOTO)
+		 jsonObj = JSON.parse(result);		 
 		 document.getElementById("cntName").textContent = jsonObj.FIRSTNAME;
 		 document.getElementById("cntGender").textContent = jsonObj.GENDER;
 		 document.getElementById("cntDob").textContent = jsonObj.DATEOFBIRTH;
@@ -171,25 +192,6 @@ function deleteContact(contactId)
 	
 }
 
-// $(document).ready(function() {
-// 	$('form').on('submit', function(e) {
-// 			e.preventDefault();
-
-// 			let formdata = $(this).serialize();
-// 			$.ajax({
-// 					url: 'components/contactDatabaseOperations.cfc?method=createContact',
-// 					type: 'POST',
-// 					data: formdata,
-// 					success: function(returnValue) {
-// 							alert();
-// 							location.reload();
-// 					},
-// 					error: function() {
-							
-// 					}
-// 			});
-// 	});
-// });
 function validateContact()
 {
 	let title = document.getElementById("title").value;	
@@ -306,25 +308,53 @@ function validateContact()
 		phoneError.innerHTML = "cannot be empty"
 		validInput = false;
 	}
-	 alert(validInput);
+	
 	return validInput;
 }
 
 function editContact(contactId)
 {
+	let titleError = document.getElementById("titleError");
+	let firstNameError = document.getElementById("firstNameError");
+	let lastNameError = document.getElementById("lastNameError");
+	let genderError = document.getElementById("genderError");
+	let dateOfBirthError = document.getElementById("dobError");
+	let photoError = document.getElementById("photoError");
+	let addressError = document.getElementById("addressError");
+	let streetError = document.getElementById("streetError");
+	let districtError = document.getElementById("districtError");
+	let stateError = document.getElementById("stateError");
+	let nationalityError = document.getElementById("nationalityError");
+	let pincodeError = document.getElementById("pincodeError");
+	let emailError = document.getElementById("emailError");
+	let phoneError = document.getElementById("phoneError");
+
+	titleError.innerHTML = "";
+	firstNameError.innerHTML = "";
+	lastNameError.innerHTML = "";
+	genderError.innerHTML = "";
+	dateOfBirthError.innerHTML = "";
+	photoError.innerHTML = "";
+	addressError.innerHTML = "";
+	streetError.innerHTML = "";
+	districtError.innerHTML = "";
+	stateError.innerHTML = "";
+	nationalityError.innerHTML = "";
+	pincodeError.innerHTML = "";
+	emailError.innerHTML = "";
+	phoneError.innerHTML = "";
+
 	$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(returnValue) {
-			jsonObj = JSON.parse(returnValue);
-		 	console.log(jsonObj)
+			jsonObj = JSON.parse(returnValue);		 	
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
 			document.getElementById("gender").value = jsonObj.GENDER;
-			document.getElementById("dob").value = jsonObj.DATEOFBIRTH;
-			// document.getElementById("photo").value = jsonObj.PHOTO;
+			document.getElementById("dob").value = jsonObj.DATEOFBIRTH;			
 			document.getElementById("address").value = jsonObj.ADDRESS;
 			document.getElementById("street").value = jsonObj.STREET;
 			document.getElementById("district").value = jsonObj.DISTRICT;
@@ -337,8 +367,7 @@ function editContact(contactId)
 			document.getElementById("createContactText").innerHTML = "EDIT CONTACT";
 			document.getElementById("submit").innerHTML = "Save Changes";
    	 },
-   	 error: function() {
-		
+   	 error: function() {		
    	 }
       });
 }
