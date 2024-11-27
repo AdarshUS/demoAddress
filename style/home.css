@@ -201,7 +201,7 @@ input,select{
 .cnt_details{  
   width: 71%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;  
 }
 
 .editBtn,.deleteBtn,.viewBtn{
@@ -215,6 +215,13 @@ input,select{
 .exportOption a{
   cursor: pointer;
 }
+
+.cnt_detailsItem2{
+  width: 200px; 
+  display: flex;
+  justify-content: space-between;
+}
+
 
 @media print{
    header{

@@ -178,38 +178,52 @@
 										<div>
 											<div class="cnt_details">
 											<span class="cnt_heading">Name</span>
-											<span>:</span>
-											<span id="cntName"></span>										
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntName"></span>	
+											</div>																				
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Gender</span>
-											<span>:</span>
-											<span id="cntGender"></span>	
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntGender"></span>
+											</div>												
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Date Of Birth</span>
-											<span>:</span>
-											<span id="cntDob"></span>	
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntDob"></span>	
+											</div>											
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Address</span>
-											<span>:</span>
-											<span id="cntAddress"></span>	
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntAddress"></span>	
+											</div>											
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Pincode</span>
-											<span>:</span>
-											<span id="cntPincode"></span>	
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntPincode"></span>	
+											</div>										
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Email Id</span>
-											<span>:</span>
-											<span id="cntMail"></span>	
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntMail"></span>	
+											</div>										
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Phone</span>
-											<span>:</span>
-											<span id="cntPhone"></span>	
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntPhone"></span>	
+											</div>											
 										</div>																		
 									</div>												
 								</div>

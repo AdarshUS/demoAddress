@@ -2,8 +2,8 @@
 	<cffunction name="insert"  access="public" returntype="boolean">
 		<cfargument name="fullName" required="true" type="string">
 		<cfargument name="emailId" required="true" type="string" >
-		<cfargument name="userName" required="true" type="string" >
-		<cfargument name="password" required="true"  type="string" >
+		<cfargument name="userName" required="false" type="string" >
+		<cfargument name="password" required="false"  type="string" >
 		<cfargument name="profilePhoto" required="true" type="string" >
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
       <cftry>
@@ -57,18 +57,13 @@
 		<cfreturn verifyUser>		
 	</cffunction>
 
-	<cffunction name="verifyUsername" access="remote" returntype="boolean" returnformat="plain" >
-		<cfargument name="userName" type="string" required="true" >
-		<cftry>
-			<cfquery>
-			SELECT userName					
-			FROM Users
-			WHERE userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
-			</cfquery>
-		<cfcatch >
-			<cfreturn false>					
-		</cfcatch>
-		</cftry>
-		<cfreturn true>
+	<cffunction name="verifyEmail" access="public" returntype="query">
+		<cfargument name="email" type="string" required="true" >	
+			<cfquery name = "verifyEmail" datasource="#application.datasource#">
+				SELECT fullName,profilePhoto,userName		
+				FROM Users
+				WHERE emailId	 = < cfqueryparam value = "#arguments.email#" cfsqltype = "varchar" >
+			</cfquery>			
+		<cfreturn verifyEmail>
 	</cffunction>
 </cfcomponent>

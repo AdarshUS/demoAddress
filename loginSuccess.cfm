@@ -1,29 +1,38 @@
-<cfparam name="url.code" default="">
-<cfif url.code neq "">
-    <!-- Exchange Authorization Code for Access Token -->
-    <cfhttp method="POST" url="https://oauth2.googleapis.com/token" result="response">
-        <cfhttpparam type="formfield" name="code" value="#url.code#">
-        <cfhttpparam type="formfield" name="client_id" value="636355117117-8idvgifnno7urc2tqu7aqq3vs6dvkkei.apps.googleusercontent.com">
-        
-        <cfhttpparam type="formfield" name="redirect_uri" value="https://www.myaddressbook.localhost.org/loginSuccess.cfm">
-        <cfhttpparam type="formfield" name="grant_type" value="authorization_code">
-    </cfhttp>
-
-    <cfset accessToken = DeserializeJSON(response.fileContent).access_token>
-
-    <!-- Retrieve User Info -->
+ <cfset userObj = new components.userDatabaseOperations()>
+ <cflogin>
+    <cfoauth
+       type="google"
+       clientid=""
+       secretkey=""
+       result="res"                  
+       scope="email profile">
+    </cfoauth>
+</cflogin>           
+<cfif structKeyExists(res, "access_token")>
+    <cfset accessToken = res.access_token>    
     <cfhttp method="GET" url="https://www.googleapis.com/oauth2/v2/userinfo" result="userResponse">
         <cfhttpparam type="header" name="Authorization" value="Bearer #accessToken#">
     </cfhttp>
-
     <cfset userInfo = DeserializeJSON(userResponse.fileContent)>
-
-    <!-- Output User Info -->
-    <cfoutput>
-        Welcome, #userInfo.name# <br>
-        Email: #userInfo.email# <br>
-        Google ID: #userInfo.id#
-    </cfoutput>
+    <cfdump var="#userInfo#">
+    <cfset local.name = userInfo.name>
+    <cfset local.email  = userInfo.email>
+    <cfset local.image = userInfo.picture>
+    <cfdump var="#local.email#" >    
+    <cfset isEmailExist = userObj.insert(local.name,local.email,'','',local.image)>
+    <cfdump var="#isEmailExist#">
+    <cfif isEmailExist> 
+        <cfset session.fullName = local.name>
+        <cfset session.profilePhoto = local.image>
+        <cfset session.userName = local.name &"123">
+        <cflocation url="./homePage.cfm" >
+    <cfelse>   
+        <cfset local.userData  = userObj.verifyEmail(local.email)>
+        <cfset session.userName = local.userData.userName>
+        <cfset session.profilePhoto = local.userData.profilePhoto>
+        <cfset session.fullName = local.userData.fullName>
+        <cflocation url="./homePage.cfm" >                          
+    </cfif>
 <cfelse>
-    <cfoutput>Error: Missing Authorization Code</cfoutput>
+    <cfoutput>Authorization failed or access token missing.</cfoutput>
 </cfif>
