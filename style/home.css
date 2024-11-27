@@ -201,7 +201,7 @@ input,select{
 .cnt_details{  
   width: 71%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;  
 }
 
 .editBtn,.deleteBtn,.viewBtn{
@@ -212,14 +212,33 @@ input,select{
   border: 1px solid #337ab9;
 }
 
+.exportOption a{
+  cursor: pointer;
+}
+
+.cnt_detailsItem2{
+  width: 200px; 
+  display: flex;
+  justify-content: space-between;
+}
+
+
 @media print{
-  header{
+   header{
     display: none;    
   }
   .exportOption{
     display: none;    
   }
   .profileContainer{
+   display: none;
+  }
+  .contactContainer{
+   
+    border: 1px solid #e99191;
+    width: 100%;
+  }  
+  .editBtn,.deleteBtn,.viewBtn{
     display: none;
   }
 }
