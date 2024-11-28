@@ -13,18 +13,16 @@
     <cfhttp method="GET" url="https://www.googleapis.com/oauth2/v2/userinfo" result="userResponse">
         <cfhttpparam type="header" name="Authorization" value="Bearer #accessToken#">
     </cfhttp>
-    <cfset userInfo = DeserializeJSON(userResponse.fileContent)>
-    <cfdump var="#userInfo#">
+    <cfset userInfo = DeserializeJSON(userResponse.fileContent)>    
     <cfset local.name = userInfo.name>
     <cfset local.email  = userInfo.email>
     <cfset local.image = userInfo.picture>
-    <cfdump var="#local.email#" >    
-    <cfset isEmailExist = userObj.insert(local.name,local.email,'','',local.image)>
-    <cfdump var="#isEmailExist#">
-    <cfif isEmailExist> 
+    <cfset local.userName = Replace(local.name, " ", "", "all")& createUUID()>     
+    <cfset isInserted = userObj.insert(local.name,local.email,local.username,'',local.image)>  
+    <cfif isInserted> 
         <cfset session.fullName = local.name>
         <cfset session.profilePhoto = local.image>
-        <cfset session.userName = local.name &"123">
+        <cfset session.userName = local.userName>
         <cflocation url="./homePage.cfm" >
     <cfelse>   
         <cfset local.userData  = userObj.verifyEmail(local.email)>
@@ -34,5 +32,5 @@
         <cflocation url="./homePage.cfm" >                          
     </cfif>
 <cfelse>
-    <cfoutput>Authorization failed or access token missing.</cfoutput>
+    <cfoutput>Authorization failed</cfoutput>
 </cfif>

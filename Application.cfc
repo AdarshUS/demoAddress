@@ -7,7 +7,7 @@
       <cfreturn true>
    </cffunction>
 
-   <cffunction  name="onrequest" returntype="any">
+   <!--- <cffunction  name="onrequest" returntype="any">
     <cfargument name="requestpage">        
     <cfset local.arrayExclude = ["/index.cfm","/signUp.cfm","/loginSuccess.cfm"]>
     <cfif arrayContains(local.arrayExclude,arguments.requestpage)>
@@ -17,5 +17,5 @@
     <cfelse>
       <cfinclude  template="./index.cfm">
     </cfif>
-  </cffunction>
+  </cffunction> --->
 </cfcomponent>

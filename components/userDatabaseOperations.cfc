@@ -13,7 +13,7 @@
 			WHERE emailId = < cfqueryparam value = "#arguments.emailId#" cfsqltype = "varchar" >
 				OR userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
 			</cfquery>
-			<cfif verifyEmail.count GT 0>
+			<cfif verifyEmail.count GT 0>				
 				<cfreturn false>
 				<cfelse>
 					<cfquery name="insertData" datasource="#application.datasource#">
@@ -33,7 +33,7 @@
 					)					
 			</cfquery>
 			</cfif>			
-			<cfcatch type="any">
+			<cfcatch type="any">			
 				<cfreturn false>			
 			</cfcatch>
 		</cftry>

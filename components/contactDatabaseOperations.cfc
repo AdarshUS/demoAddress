@@ -54,6 +54,11 @@
                   )
          </cfquery>
       <cfcatch type="any">
+      <cfoutput >
+          <p>#cfcatch.detail#</p>  
+      </cfoutput>
+        
+         <cfdump var="inside catch" abort>
          <cfreturn false>               
       </cfcatch>
     </cftry>
