@@ -1,15 +1,12 @@
 <cfcomponent >
    <cfset this.sessionManagement = true>
    <cfset this.name = "myAddressBook">
+   <cfset this.ormEnabled = true>
+   <cfset this.datasource = "cf_tutorial">
 
-   <cffunction name="onApplicationStart"  returntype="boolean">
-      <cfset application.datasource = "cf_tutorial">
-      <cfreturn true>
-   </cffunction>
-
-   <!--- <cffunction  name="onrequest" returntype="any">
+   <cffunction  name="onrequest" returntype="any">
     <cfargument name="requestpage">        
-    <cfset local.arrayExclude = ["/index.cfm","/signUp.cfm","/loginSuccess.cfm"]>
+    <cfset local.arrayExclude = ["/index.cfm","/signUp.cfm","/loginSuccess.cfm","/scheduleBirthday.cfm","/schedule.cfm"]>
     <cfif arrayContains(local.arrayExclude,arguments.requestpage)>
       <cfinclude  template="#arguments.requestpage#">
     <cfelseif structKeyExists(session, "userName")>
@@ -17,5 +14,5 @@
     <cfelse>
       <cfinclude  template="./index.cfm">
     </cfif>
-  </cffunction> --->
+  </cffunction>
 </cfcomponent>

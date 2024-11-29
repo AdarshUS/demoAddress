@@ -9,17 +9,7 @@
       <link rel="stylesheet" href="">
    </head>
    <body>
-      <cfset local.birthdayObj = new components.birthdayWish()>
-      <cfset local.birthdayObj.makeBirthdayWish()>  
-     <cfschedule
-         action="delete"
-         task="makeBirthdayWish"
-         >    
-       <!---  operation="HTTPRequest"
-         startDate="28/11/2024"
-         startTime="6:06 PM"
-         url="http://www.myaddressbook.localhost.org/scheduleBirthday.cfm"
-         interval="daily" --->
+     <cfset local.birthdayObj = new components.birthdayWish()>
+     <cfset local.birthdayObj.makeBirthdayWish()>
    </body>
 </html>
-

@@ -15,7 +15,7 @@
       <cfargument name="email" type="string" required="true">
       <cfargument name="phone" type="string" required="true">   
       <cftry>
-         <cfquery name="insertContact" datasource="#application.datasource#">
+         <cfquery name="insertContact">
             INSERT INTO Contact (
                title
                ,firstName
@@ -67,7 +67,7 @@
 
    <cffunction name="fetchContacts" access="public" returntype="query">
       <cftry>
-         <cfquery name="getContacts" datasource="#application.datasource#">
+         <cfquery name="getContacts">
            SELECT contactId
                   ,title
                   ,firstName
@@ -95,7 +95,7 @@
    <cffunction name="fetchSingleContact" access="remote" returntype="struct" returnformat="JSON">
       <cfargument name="contactId" type="string" required="true">
       <cfset local.structContact = structNew()>
-      <cfquery name="fetchAcontact" datasource="#application.datasource#">
+      <cfquery name="fetchAcontact">
          SELECT contactId
                 ,title
                 ,firstName
@@ -125,7 +125,7 @@
 
    <cffunction name="deleteContact" access="remote" returntype="void">      
       <cfargument name="contactId" type="string" required="true">      
-      <cfquery name="deleteContact" datasource="#application.datasource#">
+      <cfquery name="deleteContact">
          DELETE
          FROM Contact
          WHERE contactId = < cfqueryparam value = "#arguments.contactId#" cfsqltype = "varchar" >             
@@ -155,7 +155,7 @@
 				<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>	
             <cfset local.photo = arguments.photo>
       <cfelse>
-         <cfquery name = "qryPhoto" datasource="#application.datasource#">
+         <cfquery name = "qryPhoto">
             SELECT photo
             FROM contact
             WHERE contactId = < cfqueryparam value = "#session.contactId#" cfsqltype = "cf_sql_varchar" >
@@ -163,7 +163,7 @@
          <cfset local.photo = qryPhoto.photo>
       </cfif>
       <cfset local.todayDate = dateFormat(now(),"dd-mm-yyy")>
-      <cfquery name="editContact" datasource="#application.datasource#">
+      <cfquery name="editContact">
          UPDATE Contact
          SET title = < cfqueryparam value = '#arguments.title#' cfsqltype = "varchar" >
             ,firstName = < cfqueryparam value = '#arguments.firstName#' cfsqltype = "varchar" >
