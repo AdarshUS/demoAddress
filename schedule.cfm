@@ -7,8 +7,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="./style/bootstrap.css">
    </head>
-   <body>
-        
+   <body>        
       <cfquery name = "getContactsDob">
           SELECT firstName,emailId,dateOfBirth from Contact WHERE _createdBy = <cfqueryparam value = #session.userName# cfsqltype="CF_SQL_VARCHAR">
       </cfquery>      

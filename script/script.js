@@ -206,9 +206,7 @@ function validateContact()
 	let nationality = document.getElementById("nationality").value;
 	let pincode = document.getElementById("pincode").value;
 	let email = document.getElementById("email").value;
-	let phone = document.getElementById("phone").value;
-	
-	
+	let phone = document.getElementById("phone").value;	
 
 	let titleError = document.getElementById("titleError");
 	let firstNameError = document.getElementById("firstNameError");
