@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	  <link rel="stylesheet" href="./style/bootstrap.css">
 	  <link rel="stylesheet" href="./style/home.css">
 </head>
 <body>
@@ -266,12 +266,14 @@
 						<th></th>
 						<th></th>
 					</tr>
-					<cfloop query="#local.AllContacts#">
+					<cfset ormReload()>
+					<cfset local.contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userName#})>
+					<cfloop Array="#local.contactsOrm#" item = item>										
 					<tr>
-						<td><img src="#local.AllContacts.photo#" alt="profile" width="70" height="70" class="prof_pic"></td>
-						<td>#local.AllContacts.firstName & " "&local.AllContacts.lastName#</td>
-						<td>#local.AllContacts.emailId#</td>
-						<td>#local.AllContacts.phoneNumber#</td>
+						<td><img src="#item.getphoto()#" alt="profile" width="70" height="70" class="prof_pic"></td>
+						<td>#item.getfirstName() & " "&item.getlastName()#</td>
+						<td>#item.getemailId()#</td>
+						<td>#item.getphoneNumber()#</td>
 						<td><button class="editBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#local.AllContacts.contactId#" onclick="editContact(this)">EDIT</button></td>
 						<td><button class="deleteBtn" onclick="deleteContact(this)" value="#local.AllContacts.contactId#">DELETE</button></td>
 						<td><button class="viewBtn" data-bs-toggle="modal" data-bs-target="##exampleModal2" value="#local.AllContacts.contactId#" onclick="viewData(this)">VIEW</button></td>

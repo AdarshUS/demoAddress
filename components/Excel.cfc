@@ -1,6 +1,6 @@
 <cfcomponent >
    <cffunction name="getExcel"  access="remote" returntype="string" returnformat="JSON">
-      <cfquery name="getContacts" datasource="#application.datasource#">
+      <cfquery name="getContacts">
            SELECT contactId
 						,title
 						,firstName
