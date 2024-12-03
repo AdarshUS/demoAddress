@@ -7,16 +7,16 @@
 		<cfargument name="profilePhoto" required="true" type="string" >
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
       <cftry>
-			<cfquery name="verifyEmail" datasource="#application.datasource#">
+			<cfquery name="verifyEmail">
 			SELECT count(emailId) as count					
 			FROM Users
 			WHERE emailId = < cfqueryparam value = "#arguments.emailId#" cfsqltype = "varchar" >
 				OR userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
 			</cfquery>
-			<cfif verifyEmail.count GT 0>
+			<cfif verifyEmail.count GT 0>				
 				<cfreturn false>
 				<cfelse>
-					<cfquery name="insertData" datasource="#application.datasource#">
+					<cfquery name="insertData">
 				INSERT INTO Users (
 						fullName
 						,emailId
@@ -33,7 +33,7 @@
 					)					
 			</cfquery>
 			</cfif>			
-			<cfcatch type="any">
+			<cfcatch type="any">			
 				<cfreturn false>			
 			</cfcatch>
 		</cftry>
@@ -44,7 +44,7 @@
 		<cfargument name="userName" type="string" required="true" >
 		<cfargument name="password" type="string" required="true">
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
-		<cfquery name="verifyUser" datasource="#application.datasource#">
+		<cfquery name="verifyUser">
 			SELECT fullName
 					,emailId
 					,userName
@@ -59,7 +59,7 @@
 
 	<cffunction name="verifyEmail" access="public" returntype="query">
 		<cfargument name="email" type="string" required="true" >	
-			<cfquery name = "verifyEmail" datasource="#application.datasource#">
+			<cfquery name = "verifyEmail">
 				SELECT fullName,profilePhoto,userName		
 				FROM Users
 				WHERE emailId	 = < cfqueryparam value = "#arguments.email#" cfsqltype = "varchar" >

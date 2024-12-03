@@ -60,6 +60,16 @@
                   <cfset session.userName = local.result.userName>
                   <cfset session.profilePhoto = local.result.profilePhoto>
                   <cfset session.fullName = local.result.fullName>
+                  <cfschedule
+                     action="update"
+                     task="birthdaymail"
+                     operation="HTTPRequest"
+                     url="http://www.myaddressbook.localhost.org/scheduleBirthday.cfm"
+                     startDate="#DateFormat(Now(),'YYYY-MM-dd')#"
+                     starttime="2:25 PM"
+                     interval ="daily"
+                     repeat = "0"
+                     overwrite="true">  
                   <cflocation url="./homePage.cfm" >                  
                <cfelse>
                   <p class="error">Incorrect UserName or Password</p>

@@ -37,8 +37,7 @@ $("#pdf").click(function() {
       $.ajax({
           url: 'components/pdf.cfc?method=getPdf',
           type: 'POST',
-          success: function(result) {
-				alert(result)
+          success: function(result) {			
 				if(fileName != "")
 				{
 					let jsonObj = JSON.parse(result);          
@@ -155,8 +154,8 @@ function viewData(contactId)
 	$.ajax({
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
-   	 data: {contactId:contactId.value},
-   	 success: function(result) {
+   	 data: {contactId:contactId.value},		
+   	 success: function(result) {			
 		 jsonObj = JSON.parse(result);		 
 		 document.getElementById("cntName").textContent = jsonObj.FIRSTNAME;
 		 document.getElementById("cntGender").textContent = jsonObj.GENDER;

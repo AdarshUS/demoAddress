@@ -1,10 +1,10 @@
 <cfcomponent >
    <cffunction name="getPdf" access="remote" returntype="string" returnformat="JSON">
       <!--- Fetch data from the database --->
-      <cfquery name="getContacts" datasource="#application.datasource#">        
+      <cfquery name="getContacts">        
             SELECT contactId,title,firstName,lastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber FROM Contact WHERE _createdBy = <cfqueryparam value = #session.userName# cfsqltype="cf_sql_varchar">      
       </cfquery>
-      <cfset local.fileName = createUUID() & ".pdf">
+      <cfset local.fileName = "mypdf.pdf">
       <cfset local.pdfFilePath = "../Files/" & local.fileName>
       <cfset local.fileForDownload = "./Files/"&local.fileName>
 
