@@ -13,8 +13,10 @@ $("#logout").click(function() {
         }
 });
 $("#excel").click(function() {     
-	let fileName =  prompt("Save File as")   
-      $.ajax({
+	let fileName =  prompt("Save File as");
+	if(fileName)
+		{
+			 $.ajax({
           url: 'components/Excel.cfc?method=getExcel',
           type: 'POST',
           success: function(result) {
@@ -30,15 +32,17 @@ $("#excel").click(function() {
           error: function() {
               
           }
-      });        
+      });
+		}             
 });
 $("#pdf").click(function() {
-  let fileName =  prompt("Save File as")
-      $.ajax({
+  let fileName =  prompt("Save File as");
+  if(fileName)
+		{
+			$.ajax({
           url: 'components/pdf.cfc?method=getPdf',
           type: 'POST',
-          success: function(result) {
-				alert(result)
+          success: function(result) {			
 				if(fileName != "")
 				{
 					let jsonObj = JSON.parse(result);          
@@ -52,6 +56,7 @@ $("#pdf").click(function() {
           error: function() {              
           }
       });        
+		}      
 });
 function validate()
 {
@@ -155,8 +160,8 @@ function viewData(contactId)
 	$.ajax({
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
-   	 data: {contactId:contactId.value},
-   	 success: function(result) {
+   	 data: {contactId:contactId.value},		
+   	 success: function(result) {			
 		 jsonObj = JSON.parse(result);		 
 		 document.getElementById("cntName").textContent = jsonObj.FIRSTNAME;
 		 document.getElementById("cntGender").textContent = jsonObj.GENDER;
@@ -207,9 +212,7 @@ function validateContact()
 	let nationality = document.getElementById("nationality").value;
 	let pincode = document.getElementById("pincode").value;
 	let email = document.getElementById("email").value;
-	let phone = document.getElementById("phone").value;
-	
-	
+	let phone = document.getElementById("phone").value;	
 
 	let titleError = document.getElementById("titleError");
 	let firstNameError = document.getElementById("firstNameError");

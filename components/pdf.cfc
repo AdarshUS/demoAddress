@@ -1,14 +1,10 @@
 <cfcomponent >
    <cffunction name="getPdf" access="remote" returntype="string" returnformat="JSON">
-      <!--- Fetch data from the database --->
-      <cfquery name="getContacts">        
-            SELECT contactId,title,firstName,lastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber FROM Contact WHERE _createdBy = <cfqueryparam value = #session.userName# cfsqltype="cf_sql_varchar">      
-      </cfquery>
+      <cfset local.contactObj = new contactDatabaseOperations()>
+      <cfset local.contacts = local.contactObj.fetchContacts()>      
       <cfset local.fileName = "mypdf.pdf">
       <cfset local.pdfFilePath = "../Files/" & local.fileName>
       <cfset local.fileForDownload = "./Files/"&local.fileName>
-
-<!--- Generate PDF --->
       <cfdocument format="PDF" 
                   filename="#local.pdfFilePath#" 
                   overwrite="yes">
@@ -32,9 +28,8 @@
                      <th>phoneNumber</th>                     
                   </tr>
             </thead>
-            <tbody>
-                  <!--- Loop through query results --->
-                  <cfoutput query="getContacts">
+            <tbody>                  
+                  <cfoutput query="local.contacts">
                      <tr>
                         <td>#title#</td>
                         <td>#firstName#</td>
