@@ -35,7 +35,7 @@
                ,_updatedBy
 	                           )
                VALUES (
-                  < cfqueryparam value = "#arguments.title#" cfsqltype = "varchar" >
+                   < cfqueryparam value = "#arguments.title#" cfsqltype = "varchar" >
                   ,< cfqueryparam value = "#arguments.firstName#" cfsqltype = "varchar" >
                   ,< cfqueryparam value = "#arguments.lastName#" cfsqltype = "varchar" >
                   ,< cfqueryparam value = "#arguments.gender#" cfsqltype = "varchar" >
@@ -56,9 +56,7 @@
       <cfcatch type="any">
       <cfoutput >
           <p>#cfcatch.detail#</p>  
-      </cfoutput>
-        
-         <cfdump var="inside catch" abort>
+      </cfoutput>        
          <cfreturn false>               
       </cfcatch>
     </cftry>
@@ -84,7 +82,7 @@
                   ,emailId
                   ,phoneNumber
             FROM Contact
-            WHERE _createdBy = < cfqueryparam value = "#session.userName#" >
+            WHERE _createdBy = < cfqueryparam value = "#session.userName#">
          </cfquery>
       <cfcatch type="any">                        
       </cfcatch>              

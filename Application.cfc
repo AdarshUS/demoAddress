@@ -3,6 +3,10 @@
    <cfset this.name = "myAddressBook">
    <cfset this.ormEnabled = true>
    <cfset this.datasource = "cf_tutorial">
+   <cfset application.contactObj = new components.contactDatabaseOperations()>
+   <cfset application.userObj = new components.userDatabaseOperations()>
+   <cfset application.pdfObj = new components.pdf()>
+   <cfset application.excelObj = new components.Excel()>
 
    <cffunction  name="onrequest" returntype="any">
     <cfargument name="requestpage">        

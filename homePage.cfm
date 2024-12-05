@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<cfset local.cntDatabaseObj = createObject("component","components.contactDatabaseOperations")>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -241,20 +240,21 @@
 			</div>
 			<cfif structKeyExists(form,"submit")>
 				<cfif LEN(form.distinguishButtons) GT 1>
-					<cfset local.result = local.cntDatabaseObj.editContact(form.distinguishButtons,form.title,form.firstName,form.lastName,form.gender,form.dob,form.photo,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>
+					<cfset Application.contactObj.editContact(form.distinguishButtons,form.title,form.firstName,form.lastName,form.gender,form.dob,form.photo,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>
 				<cfelse>
-					<cfset local.uploadRelativePath = "./Images/Uploads/">
-					<cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
-					<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>				
-					<cfset local.result = local.cntDatabaseObj.createContact(form.title,form.firstName,form.lastName,form.gender,form.dob,local.imagePath,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>					
-					<cfif NOT local.result>
+					<cfset uploadRelativePath = "./Images/Uploads/">
+					<cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
+					<cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
+					<cfset result = Application.contactObj.createContact(form.title,form.firstName,form.lastName,form.gender,form.dob,local.imagePath,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>					
+					<cfif NOT result>
 						<p>Contact Already Exists</p>						
 					<cfelse>
 						<cflocation  url="./homePage.cfm">
 					</cfif>					
 				</cfif>																			
 			</cfif>
-			<cfset local.AllContacts = local.cntDatabaseObj.fetchContacts()>	
+			<cfset AllContacts = Application.contactObj.fetchContacts()>
+			
 			<div class="contactContainer">
 				<table class="cntTable">															
 					<tr>
@@ -267,16 +267,16 @@
 						<th></th>
 					</tr>
 					<cfset ormReload()>
-					<cfset local.contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userName#})>
-					<cfloop Array="#local.contactsOrm#" item = item>										
+					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userName#})>								
+					<cfloop Array="#contactsOrm#" item = item>										
 					<tr>
 						<td><img src="#item.getphoto()#" alt="profile" width="70" height="70" class="prof_pic"></td>
 						<td>#item.getfirstName() & " "&item.getlastName()#</td>
 						<td>#item.getemailId()#</td>
 						<td>#item.getphoneNumber()#</td>
-						<td><button class="editBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#local.AllContacts.contactId#" onclick="editContact(this)">EDIT</button></td>
-						<td><button class="deleteBtn" onclick="deleteContact(this)" value="#local.AllContacts.contactId#">DELETE</button></td>
-						<td><button class="viewBtn" data-bs-toggle="modal" data-bs-target="##exampleModal2" value="#local.AllContacts.contactId#" onclick="viewData(this)">VIEW</button></td>
+						<td><button class="editBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#item.getcontactId()#" onclick="editContact(this)">EDIT</button></td>
+						<td><button class="deleteBtn" onclick="deleteContact(this)" value="#item.getcontactId()#">DELETE</button></td>
+						<td><button class="viewBtn" data-bs-toggle="modal" data-bs-target="##exampleModal2" value="#item.getcontactId()#" onclick="viewData(this)">VIEW</button></td>
 					</tr>
 					</cfloop>
 				</table>

@@ -63,14 +63,12 @@
                <div class="bottomContainer">
                   <button class="loginBtn" id="submitButton" name="submitButton">REGISTER</button>
                </div>
-            </form>
-           
-            <cfif structKeyExists(form,"submitButton")>              
-               <cfset local.databaseOpObj = new components.userDatabaseOperations()>
-               <cfset local.uploadRelativePath = "./Images/Uploads/">
-				   <cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="profile" result="newPath" >
-				   <cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>				
-               <cfset inserted = local.databaseOpObj.insert(form.fullName,form.email,form.username,form.password,local.imagePath)>
+            </form>           
+            <cfif structKeyExists(form,"submitButton")>               
+               <cfset uploadRelativePath = "./Images/Uploads/">
+				   <cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="profile" result="newPath" >
+				   <cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
+               <cfset inserted = Application.userObj.insert(form.fullName,form.email,form.username,form.password,imagePath)>
                <cfif inserted>
                   <p class="added_success">Data Submitted Successfully</p>
                <cfelse>
