@@ -64,6 +64,7 @@
    </cffunction>
 
    <cffunction name="fetchContacts" access="public" returntype="query">
+      <cfargument name="userName" type="string" required="true">
       <cftry>
          <cfquery name="getContacts">
            SELECT contactId
@@ -82,7 +83,7 @@
                   ,emailId
                   ,phoneNumber
             FROM Contact
-            WHERE _createdBy = < cfqueryparam value = "#session.userName#">
+            WHERE _createdBy = < cfqueryparam value = "#arguments.userName#">
          </cfquery>
       <cfcatch type="any">                        
       </cfcatch>              

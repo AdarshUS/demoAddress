@@ -1,7 +1,7 @@
 <cfcomponent >
    <cffunction name="getExcel"  access="remote" returntype="string" returnformat="JSON">      
 		 <cfset local.contactObj = new contactDatabaseOperations()>
-      <cfset local.contacts = local.contactObj.fetchContacts()>
+      <cfset local.contacts = local.contactObj.fetchContacts(session.userName)>
       <cfset local.fileName = "myContactSheet.xlsx">
       <cfset local.exceFilePath = expandPath("../Files/"&local.fileName)>
       <cfset local.fileForDownload = "./Files/"&local.fileName>

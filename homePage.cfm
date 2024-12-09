@@ -253,7 +253,7 @@
 					</cfif>					
 				</cfif>																			
 			</cfif>
-			<cfset AllContacts = Application.contactObj.fetchContacts()>
+			<cfset AllContacts = Application.contactObj.fetchContacts(session.userName)>
 			
 			<div class="contactContainer">
 				<table class="cntTable">															

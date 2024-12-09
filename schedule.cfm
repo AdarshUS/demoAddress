@@ -10,7 +10,7 @@
    <body>             
       <cfschedule
          action="update"
-         task="birthdaymail#session.userName#"
+         task="birthdaymail"
          operation="HTTPRequest"
          url="http://www.myaddressbook.localhost.org/components/birthdayWish.cfc?method=sendEmail&user=#session.userName#"
          startDate="#DateFormat(Now(),'YYYY-MM-dd')#"               

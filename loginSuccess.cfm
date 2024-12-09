@@ -1,4 +1,3 @@
- <cfset userObj = new components.userDatabaseOperations()>
  <cflogin>
     <cfoauth
        type="google"
@@ -18,7 +17,7 @@
     <cfset email  = userInfo.email>
     <cfset image = userInfo.picture>
     <cfset userName = Replace(name, " ", "", "all")& createUUID()>     
-    <cfset isInserted = userObj.insert(name,email,username,'',image)>  
+    <cfset isInserted = application.userObj.insert(name,email,username,'',image)>  
     <cfif isInserted> 
         <cfset session.fullName = name>
         <cfset session.profilePhoto = image>
