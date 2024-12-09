@@ -6,7 +6,7 @@
          <cfset local.sender = "adarshus1999@gmail.com">
          <cfmail from="#local.sender#" subject="birthday" to="#local.userContacts.emailId#" >
             Happy Birthday #local.userContacts.firstName# 
-         </cfmail>               
+         </cfmail>
       </cfif>
    </cffunction>
 </cfcomponent>

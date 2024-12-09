@@ -1,5 +1,5 @@
 <cfcomponent >
-	<cffunction name="insert"  access="public" returntype="boolean">
+	<cffunction name="insertUser"  access="public" returntype="boolean">
 		<cfargument name="fullName" required="true" type="string">
 		<cfargument name="emailId" required="true" type="string" >
 		<cfargument name="userName" required="false" type="string" >
@@ -7,13 +7,13 @@
 		<cfargument name="profilePhoto" required="true" type="string" >
 		<cfset local.password = hash("#arguments.password#" , "SHA-256" , "UTF-8")>
       <cftry>
-			<cfquery name="verifyEmail">
+			<cfquery name="verifyEmailUsername">
 			SELECT count(emailId) as count					
 			FROM Users
-			WHERE emailId = < cfqueryparam value = "#arguments.emailId#" cfsqltype = "varchar" >
-				OR userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
+			WHERE emailId = < cfqueryparam value = "#arguments.emailId#" cfsqltype = "cf_sql_varchar" >
+				OR userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "cf_sql_varchar" >
 			</cfquery>
-			<cfif verifyEmail.count GT 0>				
+			<cfif verifyEmailUsername.count GT 0>				
 				<cfreturn false>
 				<cfelse>
 					<cfquery name="insertData">
@@ -25,11 +25,12 @@
 						,profilePhoto
 						)
 				VALUES (
-					'#arguments.fullName#'
-					,'#arguments.emailId#'
-					,'#arguments.userName#'
-					,'#local.password#'
-					,'#arguments.profilePhoto#'
+					<cfqueryparam value = '#arguments.fullName#' cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value = '#arguments.emailId#' cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value = '#arguments.userName#' cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value = '#arguments.userName#' cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value = '#local.password#' cfsqltype="cf_sql_varchar">,
+					<cfqueryparam value = '#arguments.profilePhoto#' cfsqltype="cf_sql_varchar">					
 					)					
 			</cfquery>
 			</cfif>			
@@ -50,17 +51,21 @@
 					,userName
 					,password
 					,profilePhoto
+					,userId
 			FROM Users
-			WHERE userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "varchar" >
-			AND password = < cfqueryparam value = "#local.password#" cfsqltype = "varchar" >				
+			WHERE userName = < cfqueryparam value = "#arguments.userName#" cfsqltype = "cf_sql_varchar" >
+			AND password = < cfqueryparam value = "#local.password#" cfsqltype = "cf_sql_varchar" >				
 		</cfquery>		
-		<cfreturn verifyUser>		
+		<cfreturn verifyUser>
 	</cffunction>
 
 	<cffunction name="verifyEmail" access="public" returntype="query">
 		<cfargument name="email" type="string" required="true" >	
 			<cfquery name = "verifyEmail">
-				SELECT fullName,profilePhoto,userName		
+				SELECT fullName,
+				profilePhoto
+				,userName,
+				userId	
 				FROM Users
 				WHERE emailId	 = < cfqueryparam value = "#arguments.email#" cfsqltype = "varchar" >
 			</cfquery>			

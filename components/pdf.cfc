@@ -1,6 +1,6 @@
 <cfcomponent >
-   <cffunction name="getPdf" access="remote" returntype="string" returnformat="JSON">      
-      <cfset local.contacts = application.contactObj.fetchContacts(session.userName)>      
+   <cffunction name="getPdf" access="remote" returntype="string" returnformat="JSON">     
+      <cfset local.contacts = application.contactObj.fetchContacts(session.userId)>      
       <cfset local.fileName = "mypdf.pdf">
       <cfset local.pdfFilePath = "../Files/" & local.fileName>
       <cfset local.fileForDownload = "./Files/"&local.fileName>

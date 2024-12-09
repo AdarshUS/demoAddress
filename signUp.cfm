@@ -68,7 +68,12 @@
                <cfset uploadRelativePath = "./Images/Uploads/">
 				   <cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="profile" result="newPath" >
 				   <cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
-               <cfset inserted = Application.userObj.insert(form.fullName,form.email,form.username,form.password,imagePath)>
+               <cfset inserted = Application.userObj.insertUser(
+                  fullName = form.fullName,
+                  emailId = form.email,
+                  userName = form.username,
+                  password = form.password,
+                  profilePhoto = imagePath)>
                <cfif inserted>
                   <p class="added_success">Data Submitted Successfully</p>
                <cfelse>

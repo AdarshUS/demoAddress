@@ -53,9 +53,11 @@
                </div>            
             </form>          
             <cfif structKeyExists(form,"submit")>               
-               <cfset result = Application.userObj.verifyUser(form.userName,form.password)>               
+               <cfset result = Application.userObj.verifyUser(
+                  userName = form.userName,
+                  password = form.password)>              
                <cfif result.recordCount GT 0>
-                  <cfset session.userName = result.userName>
+                  <cfset session.userId = result.userid>
                   <cfset session.profilePhoto = result.profilePhoto>
                   <cfset session.fullName = result.fullName>                  
                   <cflocation url="./homePage.cfm" >                  

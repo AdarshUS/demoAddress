@@ -17,28 +17,23 @@
     <cfset email  = userInfo.email>
     <cfset image = userInfo.picture>
     <cfset userName = Replace(name, " ", "", "all")& createUUID()>     
-    <cfset isInserted = application.userObj.insert(name,email,username,'',image)>  
+    <cfset isInserted = application.userObj.insertUser(
+        fullName = name,
+        emailId = email,
+        userName = username,
+        password = '',
+        profilePhoto = image)>  
     <cfif isInserted> 
         <cfset session.fullName = name>
         <cfset session.profilePhoto = image>
-        <cfset session.userName = userName>
+        <cfset session.userId = userName>
         <cflocation url="./homePage.cfm" >
     <cfelse>   
-        <cfset local.userData  = userObj.verifyEmail(email)>
-        <cfset session.userName = userData.userName>
+        <cfset local.userData  = application.userObj.verifyEmail(email = email)>
+        <cfset session.userid = userData.userid>
         <cfset session.profilePhoto = userData.profilePhoto>
         <cfset session.fullName = userData.fullName>
-        <cfschedule
-          action="update"
-          task="birthdaymail"
-          operation="HTTPRequest"
-          url="http://www.myaddressbook.localhost.org/scheduleBirthday.cfm"
-          startDate="#DateFormat(Now(),'YYYY-MM-dd')#"
-           starttime="2:40 PM"
-          interval ="daily"
-          repeat = "0"
-          overwrite="true">  
-        <cflocation url="./homePage.cfm" >
+        <cflocation url="./homePage.cfm" > 
     </cfif>
 <cfelse>
     <cfoutput>Authorization failed</cfoutput>

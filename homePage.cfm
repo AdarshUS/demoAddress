@@ -91,6 +91,7 @@
 											</table>
 											<label for="photo">Upload Photo</label>
 											<input type="file" name="photo" id="photo" class="inputPhoto">
+											<input type="hidden" id="imagePathEdit" name="imagePathEdit">
 											<div id="photoError" class="error"></div>
 											<div class="cntDetailsText">Contact Details</div>
 											<table class="personalCntTable">
@@ -179,49 +180,49 @@
 											<span class="cnt_heading">Name</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntName"></span>	
+												<span id="cntName" class="cnt_Data"></span>	
 											</div>																				
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Gender</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntGender"></span>
+												<span id="cntGender" class="cnt_Data"></span>
 											</div>												
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Date Of Birth</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntDob"></span>	
+												<span id="cntDob" class="cnt_Data"></span>	
 											</div>											
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Address</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntAddress"></span>	
+												<span id="cntAddress" class="cnt_Data"></span>	
 											</div>											
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Pincode</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntPincode"></span>	
+												<span id="cntPincode" class="cnt_Data"></span>	
 											</div>										
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Email Id</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntMail"></span>	
+												<span id="cntMail" class="cnt_Data"></span>	
 											</div>										
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Phone</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntPhone"></span>	
+												<span id="cntPhone" class="cnt_Data"></span>	
 											</div>											
 										</div>																		
 									</div>												
@@ -239,13 +240,44 @@
 				</div>
 			</div>
 			<cfif structKeyExists(form,"submit")>
-				<cfif LEN(form.distinguishButtons) GT 1>
-					<cfset Application.contactObj.editContact(form.distinguishButtons,form.title,form.firstName,form.lastName,form.gender,form.dob,form.photo,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>
+				<cfif LEN(form.distinguishButtons) GT 1>					
+					<cfset Application.contactObj.editContact(
+						contactId = form.distinguishButtons,
+						title = form.title,
+						firstName = form.firstName,
+						lastName = form.lastName,
+						gender = form.gender,
+						dateOfBirth = form.dob,
+						photo = form.photo,
+						address = form.address,
+						street = form.street,
+						district = form.district,
+						state = form.state,
+						nationality = form.nationality,
+						pincode = form.pincode,
+						emailId = form.email,
+						phoneNumber = form.phone,
+						hiddenPhoto = form.imagePathEdit)>
+						
 				<cfelse>
 					<cfset uploadRelativePath = "./Images/Uploads/">
 					<cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
 					<cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
-					<cfset result = Application.contactObj.createContact(form.title,form.firstName,form.lastName,form.gender,form.dob,local.imagePath,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>					
+					<cfset result = Application.contactObj.createContact(
+						title = form.title,
+						firstName = form.firstName,
+						lastName = form.lastName,
+						gender = form.gender,
+						dateOfBirth = form.dob,
+						photo = imagePath,
+						Address = form.address,
+						street = form.street,
+						district = form.district,
+						state = form.state,
+						nationality = form.nationality,
+						pinCode = form.pincode,
+						email = form.email,
+						phone = form.phone)>					
 					<cfif NOT result>
 						<p>Contact Already Exists</p>						
 					<cfelse>
@@ -253,8 +285,7 @@
 					</cfif>					
 				</cfif>																			
 			</cfif>
-			<cfset AllContacts = Application.contactObj.fetchContacts(session.userName)>
-			
+			<cfset AllContacts = Application.contactObj.fetchContacts(userId = session.userid)>			
 			<div class="contactContainer">
 				<table class="cntTable">															
 					<tr>
@@ -267,7 +298,7 @@
 						<th></th>
 					</tr>
 					<cfset ormReload()>
-					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userName#})>								
+					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userid#})>								
 					<cfloop Array="#contactsOrm#" item = item>										
 					<tr>
 						<td><img src="#item.getphoto()#" alt="profile" width="70" height="70" class="prof_pic"></td>

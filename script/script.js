@@ -105,20 +105,7 @@ function validate()
 	{
 		usernameError.textContent = "Invalid Username";
 		validInput = false;
-	}
-	else
-	{
-		 $.ajax({
-          url: 'components/userDatabaseOperations.cfc?method=verifyEmail',
-          type: 'POST',
-			 data: {email:email},
-          success: function(result) {
-				mailError.textContent = "Email Already Exist";
-          },
-          error: function() {              
-          }
-      });        
-	}
+	}	
 
 	if(password.trim() === "")
 	{
@@ -244,6 +231,9 @@ function validateContact()
 	emailError.innerHTML = "";
 	phoneError.innerHTML = "";
 
+	var dateOfBirthParts = dateOfBirth.split("/");
+
+
 	let validInput = true;
 
 	if(title == "notSelect")
@@ -269,6 +259,11 @@ function validateContact()
 	if(dateOfBirth.trim() === "")
 	{
 		dateOfBirthError.innerHTML = "cannot be empty"
+		validInput = false;
+	}
+	else if(isNaN(Date.parse(dateOfBirthParts[2] + "-" + dateOfBirthParts[1] + "-" + dateOfBirthParts[0])))
+	{
+		dateOfBirthError.innerHTML = "Invalid Date"
 		validInput = false;
 	}
 	if(address.trim() === "")
@@ -352,7 +347,8 @@ function editContact(contactId)
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(returnValue) {
-			jsonObj = JSON.parse(returnValue);		 	
+			jsonObj = JSON.parse(returnValue);
+			alert(jsonObj);
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
@@ -366,7 +362,8 @@ function editContact(contactId)
 			document.getElementById("pincode").value = jsonObj.PINCODE;
 			document.getElementById("email").value = jsonObj.EMAILID;
 			document.getElementById("phone").value = jsonObj.PHONENUMBER;
-			document.getElementById("distinguishButtons").value = jsonObj.CONTACTID;
+			document.getElementById("imagePathEdit").value = jsonObj.PHOTO;
+			document.getElementById("distinguishButtons").value = jsonObj.CONTACTID; 
 			document.getElementById("createContactText").innerHTML = "EDIT CONTACT";
 			document.getElementById("submit").innerHTML = "Save Changes";
    	 },
