@@ -4,12 +4,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />	  
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	  <link rel="stylesheet" href="./style/bootstrap.css">
 	  <link rel="stylesheet" href="./style/home.css">
 </head>
 <body>
-	<cfoutput>		
+	<cfoutput>
+	<cfset roles = application.contactObj.fetchRoles()>	
 	 <header>
       <div class="headerItem1">
          <img src="./Images/Capture.PNG" alt="logo" height="63">
@@ -88,6 +90,19 @@
 														<div id="dobError" class="error"></div>
 													</td>											
 												</tr>
+												<tr>
+													<th class="required">Contact Role</th>
+													<th></th>																								
+												</tr>
+												<tr>
+													<td>
+														<select id="select" multiple name="role">
+															<cfloop  query="roles">															
+																<option value="#roles.roleId#">#roles.role#</option>
+															</cfloop>
+            										</select>																										
+													</td>
+												</tr>
 											</table>
 											<label for="photo">Upload Photo</label>
 											<input type="file" name="photo" id="photo" class="inputPhoto">
@@ -151,7 +166,7 @@
 														<input type="text" name="phone" id="phone" placeholder="Your Phone Number">
 														<div id="phoneError" class="error"></div>
 													</td>
-												</tr>
+												</tr>												
 											</table>										
 										</div>
 									<div class="profileIconContainer d-flex justify-content-center align-items-start">
@@ -195,6 +210,13 @@
 											<div class="cnt_detailsItem2">
 												<span>:</span>
 												<span id="cntDob" class="cnt_Data"></span>	
+											</div>											
+										</div>
+										<div class="cnt_details">
+											<span class="cnt_heading">Contact Role</span>
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntRole" class="cnt_Data"></span>	
 											</div>											
 										</div>
 										<div class="cnt_details">
@@ -257,9 +279,8 @@
 						pincode = form.pincode,
 						emailId = form.email,
 						phoneNumber = form.phone,
-						hiddenPhoto = form.imagePathEdit)>
-						
-				<cfelse>
+						hiddenPhoto = form.imagePathEdit)>						
+				<cfelse>					
 					<cfset uploadRelativePath = "./Images/Uploads/">
 					<cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
 					<cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
@@ -277,7 +298,8 @@
 						nationality = form.nationality,
 						pinCode = form.pincode,
 						email = form.email,
-						phone = form.phone)>					
+						phone = form.phone,
+						role = form.role)>
 					<cfif NOT result>
 						<p>Contact Already Exists</p>						
 					<cfelse>
@@ -298,9 +320,10 @@
 						<th></th>
 					</tr>
 					<cfset ormReload()>
-					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userid#})>								
+					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userid#})>
+					
 					<cfloop Array="#contactsOrm#" item = item>										
-					<tr>
+					<tr>					   
 						<td><img src="#item.getphoto()#" alt="profile" width="70" height="70" class="prof_pic"></td>
 						<td>#item.getfirstName() & " "&item.getlastName()#</td>
 						<td>#item.getemailId()#</td>
@@ -314,9 +337,10 @@
 			</div>
 		</div>		
 	</main>
-	</cfoutput>	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>	
+	</cfoutput>		
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>	   
 	<script src="./script/script.js"></script>
 </body>
 </html>

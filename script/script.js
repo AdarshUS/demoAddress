@@ -144,12 +144,14 @@ function validate()
 
 function viewData(contactId)
 {
+	
 	$.ajax({
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},		
    	 success: function(result) {			
-		 jsonObj = JSON.parse(result);		 
+		 jsonObj = JSON.parse(result);
+		 console.log(jsonObj);
 		 document.getElementById("cntName").textContent = jsonObj.FIRSTNAME;
 		 document.getElementById("cntGender").textContent = jsonObj.GENDER;
 		 document.getElementById("cntDob").textContent = jsonObj.DATEOFBIRTH;
@@ -158,6 +160,7 @@ function viewData(contactId)
 		 document.getElementById("cntMail").textContent = jsonObj.EMAILID;
 		 document.getElementById("cntPhone").textContent = jsonObj.PHONENUMBER;
 		 document.getElementById("profile").src = jsonObj.PHOTO;
+		 document.getElementById("cntRole").textContent = jsonObj.ROLES;
    	 },
    	 error: function() {
 		
@@ -167,6 +170,7 @@ function viewData(contactId)
 
 function deleteContact(contactId)
 {
+	alert(contactId.value);
 	if (confirm("Are you sure you want to delete"))
 	{
 		$.ajax({		
@@ -232,6 +236,7 @@ function validateContact()
 	phoneError.innerHTML = "";
 
 	var dateOfBirthParts = dateOfBirth.split("/");
+	var parsedDate = Date.parse(dateOfBirthParts[2] + "-" + dateOfBirthParts[1] + "-" + dateOfBirthParts[0]);
 
 
 	let validInput = true;
@@ -261,11 +266,12 @@ function validateContact()
 		dateOfBirthError.innerHTML = "cannot be empty"
 		validInput = false;
 	}
-	else if(isNaN(Date.parse(dateOfBirthParts[2] + "-" + dateOfBirthParts[1] + "-" + dateOfBirthParts[0])))
+	else if(isNaN(parsedDate))
 	{
 		dateOfBirthError.innerHTML = "Invalid Date"
 		validInput = false;
 	}
+
 	if(address.trim() === "")
 	{
 		addressError.innerHTML = "cannot be empty"
@@ -341,13 +347,13 @@ function editContact(contactId)
 	pincodeError.innerHTML = "";
 	emailError.innerHTML = "";
 	phoneError.innerHTML = "";
-
+  
 	$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(returnValue) {
-			jsonObj = JSON.parse(returnValue);
+			jsonObj = JSON.parse(returnValue);	
 			alert(jsonObj);
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
@@ -382,3 +388,7 @@ function printContact()
 {
 	window.print();
 }
+
+ $(document).ready(function(){
+            $("#select").chosen();
+        })

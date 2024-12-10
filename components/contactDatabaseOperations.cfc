@@ -13,7 +13,8 @@
       <cfargument name="nationality" type="string" required="true">
       <cfargument name="pinCode" type="string" required="true">
       <cfargument name="email" type="string" required="true">
-      <cfargument name="phone" type="string" required="true">   
+      <cfargument name="phone" type="string" required="true">
+      <cfargument  name="role" type="string" required="false">
       <cftry>
          <cfquery name="insertContact">
             INSERT INTO Contact (
@@ -52,7 +53,16 @@
                   ,< cfqueryparam value = "#session.userId#" cfsqltype = "varchar" >
                   ,< cfqueryparam value = "#session.userId#" cfsqltype = "varchar" >
                   )
-         </cfquery>
+         </cfquery>       
+        <cfquery name="insertContactRole">        
+        <cfloop list="#arguments.role#" delimiters="," item="role">        
+            INSERT INTO contact_roles(contact_id, role_id)
+               VALUES (
+            (SELECT contactId FROM Contact WHERE emailId = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">),
+            <cfqueryparam value="#role#" cfsqltype="cf_sql_varchar">
+            );
+         </cfloop>
+      </cfquery>      
       <cfcatch type="any">
       <cfoutput >
           <p>#cfcatch.detail#</p>  
@@ -91,7 +101,7 @@
       <cfreturn getContacts>
    </cffunction>
 
-   <cffunction name="fetchSingleContact" access="remote" returntype="struct" returnformat="JSON">
+   <!--- <cffunction name="fetchSingleContact" access="remote" returntype="struct" returnformat="JSON">
       <cfargument name="contactId" type="string" required="true">
       <cfset local.structContact = structNew()>
       <cfquery name="fetchAcontact">
@@ -111,23 +121,75 @@
                 ,emailId
                 ,phoneNumber
          FROM Contact
-         WHERE contactId = < cfqueryparam value = "#arguments.contactId#" >
+         WHERE contactId = <cfqueryparam value = "#arguments.contactId#" >
       </cfquery>
-      <cfset session.contactId = fetchAcontact.contactId>       
+      <cfquery  name="fetchARole">
+          select contact_roles.contact_id,Role.role
+         from Role INNER JOIN contact_roles on Role.roleId = contact_roles.role_id where contact_id = #arguments.contactId#;     
+      </cfquery>
        <cfset var colname = "">            
        <cfloop list="#fetchAcontact.columnList#" index="colname">
           <cfset "structContact.#colname#" = fetchAcontact[colname][1]>
        </cfloop>
-       <cfset local.structContact["dateOfBirth"] = dateFormat(fetchAcontact.dateOfBirth,"yyyy-mm-dd")>
+        <cfset local.structContact.roles = []>
+         <cfloop query="local.fetchARole">
+            <cfset arrayAppend(local.structContact.roles, local.fetchARole.role)>
+         </cfloop>
+       <cfset local.structContact["dateOfBirth"] = dateFormat(fetchAcontact.dateOfBirth,"yyyy-mm-dd")>       
       <cfreturn local.structContact>      
-   </cffunction>
+   </cffunction> --->
+   <cffunction name="fetchSingleContact" access="remote" returntype="struct" returnformat="JSON">
+    <cfargument name="contactId" type="string" required="true">
+    <cfset var local = {}> <!--- Initialize local scope --->
+    <cfset local.structContact = structNew()>
+
+    <!--- Fetch contact details --->
+    <cfquery name="local.fetchAcontact">
+        SELECT 
+            contactId, title, firstName, lastName, gender, 
+            dateOfBirth, photo, address, street, district, 
+            state, nationality, pinCode, emailId, phoneNumber
+        FROM Contact
+        WHERE contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_varchar">
+    </cfquery>
+
+    <!--- Fetch roles for the contact --->
+    <cfquery name="local.fetchARole" >
+        SELECT contact_roles.contact_id, Role.role
+        FROM Role
+        INNER JOIN contact_roles 
+            ON Role.roleId = contact_roles.role_id
+        WHERE contact_id = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_varchar">
+    </cfquery>
+
+    <!--- Map contact details to struct --->
+    <cfset var colname = "">
+    <cfloop list="#local.fetchAcontact.columnList#" index="colname">
+        <cfset local.structContact[colname] = local.fetchAcontact[colname][1]>
+    </cfloop>
+
+    <!--- Format dateOfBirth --->
+    <cfif NOT isNull(local.structContact.dateOfBirth)>
+        <cfset local.structContact.dateOfBirth = dateFormat(local.structContact.dateOfBirth, "yyyy-MM-dd")>
+    </cfif>
+
+    <!--- Add roles to structContact --->
+    <cfset local.structContact.roles = []>
+    <cfloop query="local.fetchARole">
+        <cfset arrayAppend(local.structContact.roles, local.fetchARole.role)>
+    </cfloop>
+
+    <!--- Return the structured contact details --->
+    <cfreturn local.structContact>
+</cffunction>
+
 
    <cffunction name="deleteContact" access="remote" returntype="void">      
       <cfargument name="contactId" type="string" required="true">      
       <cfquery name="deleteContact">
          DELETE
          FROM Contact
-         WHERE contactId = < cfqueryparam value = "#arguments.contactId#" cfsqltype = "varchar" >             
+         WHERE contactId = <cfqueryparam value = "#arguments.contactId#" cfsqltype = "varchar" >             
       </cfquery>    
    </cffunction>
 
@@ -153,12 +215,7 @@
 				<cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
 				<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>	
             <cfset local.photo = local.imagePath>
-      <cfelse>
-         <!--- <cfquery name = "qryPhoto">
-            SELECT photo
-            FROM contact
-            WHERE contactId = < cfqueryparam value = "#session.contactId#" cfsqltype = "cf_sql_varchar" >
-         </cfquery> --->
+      <cfelse>       
          <cfset local.photo = arguments.hiddenPhoto>
       </cfif>
       <cfset local.todayDate = dateFormat(now(),"dd-mm-yyy")>      
@@ -181,5 +238,13 @@
         , _updatedOn = <cfqueryparam value="#local.todayDate#" cfsqltype="cf_sql_date">
     WHERE contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_varchar">
 </cfquery>
+   </cffunction>
+   <cffunction name="fetchRoles" access="public" returntype="query">
+      <cfquery  name="getRoles">
+         SELECT roleId
+         ,role
+         FROM Role; 
+      </cfquery>
+      <cfreturn getRoles>
    </cffunction>
 </cfcomponent>

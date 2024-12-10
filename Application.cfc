@@ -2,13 +2,14 @@
    <cfset this.sessionManagement = true>
    <cfset this.name = "myAddressBook">
    <cfset this.ormEnabled = true>
-   <cfset this.datasource = "cf_tutorial">  
+   <cfset this.datasource = "cf_tutorial">   
+   
 
-<cffunction name="onApplicationStart" returnType="boolean">
-   <cfset application.contactObj = new components.contactDatabaseOperations()>
-   <cfset application.userObj = new components.userDatabaseOperations()>
+<cffunction name="onApplicationStart" returnType="boolean">  
    <cfset application.pdfObj = new components.pdf()>
    <cfset application.excelObj = new components.Excel()>
+   <cfset application.contactObj = new components.contactDatabaseOperations()>
+   <cfset application.userObj = new components.userDatabaseOperations()>
 <cfreturn true>
 
 </cffunction>

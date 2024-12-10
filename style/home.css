@@ -225,6 +225,10 @@ input,select{
   padding: 0 14px;
 }
 
+.chosen-container{
+  width: 116px !important;
+}
+
 
 @media print{
    header{
