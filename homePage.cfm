@@ -175,7 +175,7 @@
 								</div>						
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshSelector()">Close</button>
 								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>
 							</div>							
 						</div>
@@ -261,7 +261,7 @@
 					</div>
 				</div>
 			</div>
-			<cfif structKeyExists(form,"submit")>
+			<cfif structKeyExists(form,"submit")>			 
 				<cfif LEN(form.distinguishButtons) GT 1>					
 					<cfset Application.contactObj.editContact(
 						contactId = form.distinguishButtons,
@@ -279,7 +279,8 @@
 						pincode = form.pincode,
 						emailId = form.email,
 						phoneNumber = form.phone,
-						hiddenPhoto = form.imagePathEdit)>						
+						hiddenPhoto = form.imagePathEdit,
+						role = form.role)>						
 				<cfelse>					
 					<cfset uploadRelativePath = "./Images/Uploads/">
 					<cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
@@ -307,7 +308,7 @@
 					</cfif>					
 				</cfif>																			
 			</cfif>
-			<cfset AllContacts = Application.contactObj.fetchContacts(userId = session.userid)>			
+			<cfset AllContacts = Application.contactObj.fetchContacts(userId = session.userid)>				
 			<div class="contactContainer">
 				<table class="cntTable">															
 					<tr>

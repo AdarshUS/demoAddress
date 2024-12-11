@@ -1,1 +1,1 @@
-<cfset application.contactObj.deleteContact(5)>
+<cfset application.pdfObj.getPdf()>

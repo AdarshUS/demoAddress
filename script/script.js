@@ -318,6 +318,7 @@ function validateContact()
 
 function editContact(contactId)
 {
+	$("#select").val("").trigger("chosen:updated");
 	let titleError = document.getElementById("titleError");
 	let firstNameError = document.getElementById("firstNameError");
 	let lastNameError = document.getElementById("lastNameError");
@@ -353,8 +354,18 @@ function editContact(contactId)
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(returnValue) {
-			jsonObj = JSON.parse(returnValue);	
-			alert(jsonObj);
+		 jsonObj = JSON.parse(returnValue);	
+		 console.log(jsonObj);
+		 var roleArray = jsonObj.ROLESID;
+		 const multiSelect = document.getElementById("select");
+		Array.from(multiSelect.options).forEach(option => {       
+			if(roleArray.includes(parseInt(option.value)))
+			 {				
+            option.selected = true;
+				$("#select").trigger("chosen:updated");	
+			 }			
+		});
+		   
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
@@ -380,6 +391,7 @@ function editContact(contactId)
 
 function createContact()
 {
+	$("#select").val("").trigger("chosen:updated");
 	document.getElementById("createContactText").innerHTML = "CREATE CONTACT";
 	document.getElementById("form").reset();
 }
@@ -387,6 +399,11 @@ function createContact()
 function printContact()
 {
 	window.print();
+}
+
+function refreshSelector()
+{
+	 $("#select").val("").trigger("chosen:updated");
 }
 
  $(document).ready(function(){

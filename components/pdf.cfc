@@ -1,6 +1,6 @@
 <cfcomponent >
    <cffunction name="getPdf" access="remote" returntype="string" returnformat="JSON">     
-      <cfset local.contacts = application.contactObj.fetchContacts(session.userId)>      
+      <cfset local.contacts = application.contactObj.fetchContacts(session.userId)>         
       <cfset local.fileName = "mypdf.pdf">
       <cfset local.pdfFilePath = "../Files/" & local.fileName>
       <cfset local.fileForDownload = "./Files/"&local.fileName>
@@ -24,7 +24,9 @@
                      <th>nationality</th>
                      <th>pinCode</th>
                      <th>emailId</th>
-                     <th>phoneNumber</th>                     
+                     <th>phoneNumber</th>
+                     <th>Role</th>
+                                      
                   </tr>
             </thead>
             <tbody>                  
@@ -43,7 +45,8 @@
                         <td>#nationality#</td>
                         <td>#pinCode#</td>
                         <td>#emailId#</td>
-                        <td>#phoneNumber#</td>
+                        <td>#phoneNumber#</td>                       
+                        <td>#roles#</td>                       
                      </tr>
                   </cfoutput>
             </tbody>
