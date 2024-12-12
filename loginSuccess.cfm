@@ -29,7 +29,7 @@
         <cfset session.userId = userName>
         <cflocation url="./homePage.cfm" >
     <cfelse>   
-        <cfset local.userData  = application.userObj.verifyEmail(email = email)>
+        <cfset local.userData  = application.userObj.verifyEmail(email = email)>        
         <cfset session.userid = userData.userid>
         <cfset session.profilePhoto = userData.profilePhoto>
         <cfset session.fullName = userData.fullName>

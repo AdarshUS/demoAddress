@@ -12,51 +12,40 @@ $("#logout").click(function() {
             });
         }
 });
-$("#excel").click(function() {     
-	let fileName =  prompt("Save File as");
-	if(fileName)
-		{
-			 $.ajax({
-          url: 'components/Excel.cfc?method=getExcel',
-          type: 'POST',
-          success: function(result) {
-				if(fileName != "")
-				{
-					let jsonObj = JSON.parse(result);          
-					let a = document.createElement("a");
-					a.download = fileName;      
-					a.href = jsonObj;
-					a.click();
-				}				              
-          },
-          error: function() {
-              
-          }
-      });
-		}             
+$("#excel").click(function() {	
+	 $.ajax({
+    url: 'components/Excel.cfc?method=getExcel',
+    type: 'POST',
+    success: function(result) {
+
+	let jsonObj = JSON.parse(result);          
+	let a = document.createElement("a");
+	a.download = jsonObj.user;      
+	a.href = jsonObj.fileForDownload;
+	a.click();
+						              
+    },
+    error: function() {        
+    }
 });
-$("#pdf").click(function() {
-  let fileName =  prompt("Save File as");
-  if(fileName)
-		{
-			$.ajax({
-          url: 'components/pdf.cfc?method=getPdf',
-          type: 'POST',
-          success: function(result) {			
-				if(fileName != "")
-				{
-					let jsonObj = JSON.parse(result);          
-					let a = document.createElement("a");
-					a.download = fileName;      
-					a.href = jsonObj;
-					a.click();
-				}
-            
-          },
-          error: function() {              
-          }
-      });        
-		}      
+		           
+});
+$("#pdf").click(function() { 
+		
+	$.ajax({
+    url: 'components/pdf.cfc?method=getPdf',
+    type: 'POST',
+    success: function(result) {						
+		let jsonObj = JSON.parse(result);	
+		let a = document.createElement("a");
+		a.download = jsonObj.user;      
+		a.href = jsonObj.fileForDownload;
+		a.click();		          
+    },
+    error: function() {              
+    }
+});        
+		  
 });
 function validate()
 {
@@ -162,34 +151,31 @@ function viewData(contactId)
 		 document.getElementById("profile").src = jsonObj.PHOTO;
 		 document.getElementById("cntRole").textContent = jsonObj.ROLES;
    	 },
-   	 error: function() {
-		
+   	 error: function() {		
    	 }
       });
 }
 
 function deleteContact(contactId)
-{
-	alert(contactId.value);
+{	
 	if (confirm("Are you sure you want to delete"))
 	{
 		$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=deleteContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
-   	 success: function(returnValue) {
-			location.reload();
+   	 success: function() {
+			// location.reload();
+			document.getElementById(contactId.value).remove();
    	 },
-   	 error: function() {
-		
+   	 error: function() {		
    	 }
       });
-	}
-	
+	}	
 }
 
 function validateContact()
-{
+{	
 	let title = document.getElementById("title").value;	
 	let firstName = document.getElementById("firstName").value;
 	let lastName = document.getElementById("lastName").value;
@@ -203,7 +189,8 @@ function validateContact()
 	let nationality = document.getElementById("nationality").value;
 	let pincode = document.getElementById("pincode").value;
 	let email = document.getElementById("email").value;
-	let phone = document.getElementById("phone").value;	
+	let phone = document.getElementById("phone").value;
+	let role = document.getElementById("select").value;
 
 	let titleError = document.getElementById("titleError");
 	let firstNameError = document.getElementById("firstNameError");
@@ -219,6 +206,7 @@ function validateContact()
 	let pincodeError = document.getElementById("pincodeError");
 	let emailError = document.getElementById("emailError");
 	let phoneError = document.getElementById("phoneError");
+	let roleError = document.getElementById("RoleError"); 
 
 	titleError.innerHTML = "";
 	firstNameError.innerHTML = "";
@@ -234,52 +222,50 @@ function validateContact()
 	pincodeError.innerHTML = "";
 	emailError.innerHTML = "";
 	phoneError.innerHTML = "";
-
-	var dateOfBirthParts = dateOfBirth.split("/");
-	var parsedDate = Date.parse(dateOfBirthParts[2] + "-" + dateOfBirthParts[1] + "-" + dateOfBirthParts[0]);
-
-
-	let validInput = true;
+	roleError.innerHTML = "";
+	
+	var CurrentDate = new Date();
+	GivenDate = new Date(dateOfBirth);
 
 	if(title == "notSelect")
 	{		
-		titleError.innerHTML = "Select Any"		
+		titleError.innerHTML = "Select Any title"		
 		validInput = false;
 	}
 	if(firstName.trim() === "")
 	{
-		firstNameError.innerHTML = "cannot be empty"
+		firstNameError.innerHTML = "firstName required"
 		validInput = false;
 	}
 	if(lastName.trim() === "")
 	{
-		lastNameError.innerHTML = "cannot be empty"
+		lastNameError.innerHTML = "lastName required"
 		validInput = false;
 	}
 	if(gender == "notSelect")
 	{
-		genderError.innerHTML = "cannot be empty"
+		genderError.innerHTML = "gender cannot be empty"
 		validInput = false;
 	}
 	if(dateOfBirth.trim() === "")
 	{
-		dateOfBirthError.innerHTML = "cannot be empty"
+		dateOfBirthError.innerHTML = "dateOfBirth cannot be empty"
 		validInput = false;
 	}
-	else if(isNaN(parsedDate))
+	else if(GivenDate > CurrentDate)
 	{
-		dateOfBirthError.innerHTML = "Invalid Date"
+		dateOfBirthError.innerHTML = "Invalid DateOfBirth"
 		validInput = false;
 	}
 
 	if(address.trim() === "")
 	{
-		addressError.innerHTML = "cannot be empty"
+		addressError.innerHTML = "address cannot be empty"
 		validInput = false;
 	}
 	if(street.trim() === "")
 	{
-		streetError.innerHTML = "cannot be empty"
+		streetError.innerHTML = "street cannot be empty"
 		validInput = false;
 	}
 	if(district.trim() === "")
@@ -289,30 +275,33 @@ function validateContact()
 	}
 	if(state.trim() === "")
 	{
-		stateError.innerHTML = "cannot be empty"
+		stateError.innerHTML = "state cannot be empty"
 		validInput = false;
 	}
 	if(nationality.trim() === "")
 	{
-		nationalityError.innerHTML = "cannot be empty"
+		nationalityError.innerHTML = "nationality cannot be empty"
 		validInput = false;
 	}
 	if(pincode.trim() === "")
 	{
-		pincodeError.innerHTML = "cannot be empty"
+		pincodeError.innerHTML = "pincode cannot be empty"
 		validInput = false;
 	}
 	if(email.trim() === "")
 	{
-		emailError.innerHTML = "cannot be empty"
+		emailError.innerHTML = "email cannot be empty"
 		validInput = false;
 	}
 	if(phone.trim() === "")
 	{
-		phoneError.innerHTML = "cannot be empty"
+		phoneError.innerHTML = "phone cannot be empty"
 		validInput = false;
 	}
-	
+	if(role.trim() === "")
+	{
+		roleError.innerHTML = "select any Role"
+	}	
 	return validInput;
 }
 
@@ -364,8 +353,7 @@ function editContact(contactId)
             option.selected = true;
 				$("#select").trigger("chosen:updated");	
 			 }			
-		});
-		   
+		});		   
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
@@ -390,7 +378,8 @@ function editContact(contactId)
 }
 
 function createContact()
-{
+{	
+	$(".error").text("");	
 	$("#select").val("").trigger("chosen:updated");
 	document.getElementById("createContactText").innerHTML = "CREATE CONTACT";
 	document.getElementById("form").reset();
@@ -407,5 +396,5 @@ function refreshSelector()
 }
 
  $(document).ready(function(){
-            $("#select").chosen();
-        })
+   $("#select").chosen();
+})
