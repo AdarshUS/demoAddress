@@ -1,4 +1,3 @@
- <cfset userObj = new components.userDatabaseOperations()>
  <cflogin>
     <cfoauth
        type="google"
@@ -14,22 +13,27 @@
         <cfhttpparam type="header" name="Authorization" value="Bearer #accessToken#">
     </cfhttp>
     <cfset userInfo = DeserializeJSON(userResponse.fileContent)>    
-    <cfset local.name = userInfo.name>
-    <cfset local.email  = userInfo.email>
-    <cfset local.image = userInfo.picture>
-    <cfset local.userName = Replace(local.name, " ", "", "all")& createUUID()>     
-    <cfset isInserted = userObj.insert(local.name,local.email,local.username,'',local.image)>  
+    <cfset name = userInfo.name>
+    <cfset email  = userInfo.email>
+    <cfset image = userInfo.picture>
+    <cfset userName = Replace(name, " ", "", "all")& createUUID()>     
+    <cfset isInserted = application.userObj.insertUser(
+        fullName = name,
+        emailId = email,
+        userName = username,
+        password = '',
+        profilePhoto = image)>  
     <cfif isInserted> 
-        <cfset session.fullName = local.name>
-        <cfset session.profilePhoto = local.image>
-        <cfset session.userName = local.userName>
+        <cfset session.fullName = name>
+        <cfset session.profilePhoto = image>
+        <cfset session.userId = userName>
         <cflocation url="./homePage.cfm" >
     <cfelse>   
-        <cfset local.userData  = userObj.verifyEmail(local.email)>
-        <cfset session.userName = local.userData.userName>
-        <cfset session.profilePhoto = local.userData.profilePhoto>
-        <cfset session.fullName = local.userData.fullName>
-        <cflocation url="./homePage.cfm" >                          
+        <cfset local.userData  = application.userObj.verifyEmail(email = email)>
+        <cfset session.userid = userData.userid>
+        <cfset session.profilePhoto = userData.profilePhoto>
+        <cfset session.fullName = userData.fullName>
+        <cflocation url="./homePage.cfm" > 
     </cfif>
 <cfelse>
     <cfoutput>Authorization failed</cfoutput>

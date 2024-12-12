@@ -199,9 +199,10 @@ input,select{
 }
 
 .cnt_details{  
-  width: 71%;
+  width: 100%;
   display: flex;
-  justify-content: space-between;  
+  justify-content: space-between;
+  padding: 7px;
 }
 
 .editBtn,.deleteBtn,.viewBtn{
@@ -217,9 +218,15 @@ input,select{
 }
 
 .cnt_detailsItem2{
-  width: 200px; 
-  display: flex;
-  justify-content: space-between;
+  width: 75%; 
+}
+
+.cnt_Data{
+  padding: 0 14px;
+}
+
+.chosen-container{
+  width: 116px !important;
 }
 
 

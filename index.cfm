@@ -51,15 +51,15 @@
                   </div>               
                   <div class="registerContainer">Don't have an account? <a href="./signUp.cfm">Register Here</a></div>
                </div>            
-            </form>
-          
-            <cfif structKeyExists(form,"submit")>
-               <cfset local.userDatabaseObj = new components.userDatabaseOperations()>
-               <cfset local.result = local.userDatabaseObj.verifyUser(form.userName,form.password)>               
-               <cfif local.result.recordCount GT 0>
-                  <cfset session.userName = local.result.userName>
-                  <cfset session.profilePhoto = local.result.profilePhoto>
-                  <cfset session.fullName = local.result.fullName>
+            </form>          
+            <cfif structKeyExists(form,"submit")>               
+               <cfset result = Application.userObj.verifyUser(
+                  userName = form.userName,
+                  password = form.password)>              
+               <cfif result.recordCount GT 0>
+                  <cfset session.userId = result.userid>
+                  <cfset session.profilePhoto = result.profilePhoto>
+                  <cfset session.fullName = result.fullName>                  
                   <cflocation url="./homePage.cfm" >                  
                <cfelse>
                   <p class="error">Incorrect UserName or Password</p>

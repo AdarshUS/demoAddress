@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<cfset local.cntDatabaseObj = createObject("component","components.contactDatabaseOperations")>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />	  
+	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	  <link rel="stylesheet" href="./style/bootstrap.css">
 	  <link rel="stylesheet" href="./style/home.css">
 </head>
 <body>
-	<cfoutput>		
+	<cfoutput>
+	<cfset roles = application.contactObj.fetchRoles()>	
 	 <header>
       <div class="headerItem1">
          <img src="./Images/Capture.PNG" alt="logo" height="63">
@@ -89,9 +90,23 @@
 														<div id="dobError" class="error"></div>
 													</td>											
 												</tr>
+												<tr>
+													<th class="required">Contact Role</th>
+													<th></th>																								
+												</tr>
+												<tr>
+													<td>
+														<select id="select" multiple name="role">
+															<cfloop  query="roles">															
+																<option value="#roles.roleId#">#roles.role#</option>
+															</cfloop>
+            										</select>																										
+													</td>
+												</tr>
 											</table>
 											<label for="photo">Upload Photo</label>
 											<input type="file" name="photo" id="photo" class="inputPhoto">
+											<input type="hidden" id="imagePathEdit" name="imagePathEdit">
 											<div id="photoError" class="error"></div>
 											<div class="cntDetailsText">Contact Details</div>
 											<table class="personalCntTable">
@@ -151,7 +166,7 @@
 														<input type="text" name="phone" id="phone" placeholder="Your Phone Number">
 														<div id="phoneError" class="error"></div>
 													</td>
-												</tr>
+												</tr>												
 											</table>										
 										</div>
 									<div class="profileIconContainer d-flex justify-content-center align-items-start">
@@ -160,7 +175,7 @@
 								</div>						
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshSelector()">Close</button>
 								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>
 							</div>							
 						</div>
@@ -180,49 +195,56 @@
 											<span class="cnt_heading">Name</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntName"></span>	
+												<span id="cntName" class="cnt_Data"></span>	
 											</div>																				
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Gender</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntGender"></span>
+												<span id="cntGender" class="cnt_Data"></span>
 											</div>												
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Date Of Birth</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntDob"></span>	
+												<span id="cntDob" class="cnt_Data"></span>	
+											</div>											
+										</div>
+										<div class="cnt_details">
+											<span class="cnt_heading">Contact Role</span>
+											<div class="cnt_detailsItem2">
+												<span>:</span>
+												<span id="cntRole" class="cnt_Data"></span>	
 											</div>											
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Address</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntAddress"></span>	
+												<span id="cntAddress" class="cnt_Data"></span>	
 											</div>											
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Pincode</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntPincode"></span>	
+												<span id="cntPincode" class="cnt_Data"></span>	
 											</div>										
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Email Id</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntMail"></span>	
+												<span id="cntMail" class="cnt_Data"></span>	
 											</div>										
 										</div>
 										<div class="cnt_details">
 											<span class="cnt_heading">Phone</span>
 											<div class="cnt_detailsItem2">
 												<span>:</span>
-												<span id="cntPhone"></span>	
+												<span id="cntPhone" class="cnt_Data"></span>	
 											</div>											
 										</div>																		
 									</div>												
@@ -239,22 +261,54 @@
 					</div>
 				</div>
 			</div>
-			<cfif structKeyExists(form,"submit")>
-				<cfif LEN(form.distinguishButtons) GT 1>
-					<cfset local.result = local.cntDatabaseObj.editContact(form.distinguishButtons,form.title,form.firstName,form.lastName,form.gender,form.dob,form.photo,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>
-				<cfelse>
-					<cfset local.uploadRelativePath = "./Images/Uploads/">
-					<cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
-					<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>				
-					<cfset local.result = local.cntDatabaseObj.createContact(form.title,form.firstName,form.lastName,form.gender,form.dob,local.imagePath,form.address,form.street,form.district,form.state,form.nationality,form.pincode,form.email,form.phone)>					
-					<cfif NOT local.result>
+			<cfif structKeyExists(form,"submit")>			 
+				<cfif LEN(form.distinguishButtons) GT 1>					
+					<cfset Application.contactObj.editContact(
+						contactId = form.distinguishButtons,
+						title = form.title,
+						firstName = form.firstName,
+						lastName = form.lastName,
+						gender = form.gender,
+						dateOfBirth = form.dob,
+						photo = form.photo,
+						address = form.address,
+						street = form.street,
+						district = form.district,
+						state = form.state,
+						nationality = form.nationality,
+						pincode = form.pincode,
+						emailId = form.email,
+						phoneNumber = form.phone,
+						hiddenPhoto = form.imagePathEdit,
+						role = form.role)>						
+				<cfelse>					
+					<cfset uploadRelativePath = "./Images/Uploads/">
+					<cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
+					<cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
+					<cfset result = Application.contactObj.createContact(
+						title = form.title,
+						firstName = form.firstName,
+						lastName = form.lastName,
+						gender = form.gender,
+						dateOfBirth = form.dob,
+						photo = imagePath,
+						Address = form.address,
+						street = form.street,
+						district = form.district,
+						state = form.state,
+						nationality = form.nationality,
+						pinCode = form.pincode,
+						email = form.email,
+						phone = form.phone,
+						role = form.role)>
+					<cfif NOT result>
 						<p>Contact Already Exists</p>						
 					<cfelse>
 						<cflocation  url="./homePage.cfm">
 					</cfif>					
 				</cfif>																			
 			</cfif>
-			<cfset local.AllContacts = local.cntDatabaseObj.fetchContacts()>	
+			<cfset AllContacts = Application.contactObj.fetchContacts(userId = session.userid)>				
 			<div class="contactContainer">
 				<table class="cntTable">															
 					<tr>
@@ -267,25 +321,27 @@
 						<th></th>
 					</tr>
 					<cfset ormReload()>
-					<cfset local.contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userName#})>
-					<cfloop Array="#local.contactsOrm#" item = item>										
-					<tr>
+					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userid#})>
+					
+					<cfloop Array="#contactsOrm#" item = item>										
+					<tr>					   
 						<td><img src="#item.getphoto()#" alt="profile" width="70" height="70" class="prof_pic"></td>
 						<td>#item.getfirstName() & " "&item.getlastName()#</td>
 						<td>#item.getemailId()#</td>
 						<td>#item.getphoneNumber()#</td>
-						<td><button class="editBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#local.AllContacts.contactId#" onclick="editContact(this)">EDIT</button></td>
-						<td><button class="deleteBtn" onclick="deleteContact(this)" value="#local.AllContacts.contactId#">DELETE</button></td>
-						<td><button class="viewBtn" data-bs-toggle="modal" data-bs-target="##exampleModal2" value="#local.AllContacts.contactId#" onclick="viewData(this)">VIEW</button></td>
+						<td><button class="editBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" value="#item.getcontactId()#" onclick="editContact(this)">EDIT</button></td>
+						<td><button class="deleteBtn" onclick="deleteContact(this)" value="#item.getcontactId()#">DELETE</button></td>
+						<td><button class="viewBtn" data-bs-toggle="modal" data-bs-target="##exampleModal2" value="#item.getcontactId()#" onclick="viewData(this)">VIEW</button></td>
 					</tr>
 					</cfloop>
 				</table>
 			</div>
 		</div>		
 	</main>
-	</cfoutput>	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>	
+	</cfoutput>		
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>	   
 	<script src="./script/script.js"></script>
 </body>
 </html>

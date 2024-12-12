@@ -13,8 +13,10 @@ $("#logout").click(function() {
         }
 });
 $("#excel").click(function() {     
-	let fileName =  prompt("Save File as")   
-      $.ajax({
+	let fileName =  prompt("Save File as");
+	if(fileName)
+		{
+			 $.ajax({
           url: 'components/Excel.cfc?method=getExcel',
           type: 'POST',
           success: function(result) {
@@ -30,15 +32,17 @@ $("#excel").click(function() {
           error: function() {
               
           }
-      });        
+      });
+		}             
 });
 $("#pdf").click(function() {
-  let fileName =  prompt("Save File as")
-      $.ajax({
+  let fileName =  prompt("Save File as");
+  if(fileName)
+		{
+			$.ajax({
           url: 'components/pdf.cfc?method=getPdf',
           type: 'POST',
-          success: function(result) {
-				alert(result)
+          success: function(result) {			
 				if(fileName != "")
 				{
 					let jsonObj = JSON.parse(result);          
@@ -52,6 +56,7 @@ $("#pdf").click(function() {
           error: function() {              
           }
       });        
+		}      
 });
 function validate()
 {
@@ -100,20 +105,7 @@ function validate()
 	{
 		usernameError.textContent = "Invalid Username";
 		validInput = false;
-	}
-	else
-	{
-		 $.ajax({
-          url: 'components/userDatabaseOperations.cfc?method=verifyEmail',
-          type: 'POST',
-			 data: {email:email},
-          success: function(result) {
-				mailError.textContent = "Email Already Exist";
-          },
-          error: function() {              
-          }
-      });        
-	}
+	}	
 
 	if(password.trim() === "")
 	{
@@ -152,12 +144,14 @@ function validate()
 
 function viewData(contactId)
 {
+	
 	$.ajax({
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
-   	 data: {contactId:contactId.value},
-   	 success: function(result) {
-		 jsonObj = JSON.parse(result);		 
+   	 data: {contactId:contactId.value},		
+   	 success: function(result) {			
+		 jsonObj = JSON.parse(result);
+		 console.log(jsonObj);
 		 document.getElementById("cntName").textContent = jsonObj.FIRSTNAME;
 		 document.getElementById("cntGender").textContent = jsonObj.GENDER;
 		 document.getElementById("cntDob").textContent = jsonObj.DATEOFBIRTH;
@@ -166,6 +160,7 @@ function viewData(contactId)
 		 document.getElementById("cntMail").textContent = jsonObj.EMAILID;
 		 document.getElementById("cntPhone").textContent = jsonObj.PHONENUMBER;
 		 document.getElementById("profile").src = jsonObj.PHOTO;
+		 document.getElementById("cntRole").textContent = jsonObj.ROLES;
    	 },
    	 error: function() {
 		
@@ -175,6 +170,7 @@ function viewData(contactId)
 
 function deleteContact(contactId)
 {
+	alert(contactId.value);
 	if (confirm("Are you sure you want to delete"))
 	{
 		$.ajax({		
@@ -207,9 +203,7 @@ function validateContact()
 	let nationality = document.getElementById("nationality").value;
 	let pincode = document.getElementById("pincode").value;
 	let email = document.getElementById("email").value;
-	let phone = document.getElementById("phone").value;
-	
-	
+	let phone = document.getElementById("phone").value;	
 
 	let titleError = document.getElementById("titleError");
 	let firstNameError = document.getElementById("firstNameError");
@@ -241,6 +235,10 @@ function validateContact()
 	emailError.innerHTML = "";
 	phoneError.innerHTML = "";
 
+	var dateOfBirthParts = dateOfBirth.split("/");
+	var parsedDate = Date.parse(dateOfBirthParts[2] + "-" + dateOfBirthParts[1] + "-" + dateOfBirthParts[0]);
+
+
 	let validInput = true;
 
 	if(title == "notSelect")
@@ -268,6 +266,12 @@ function validateContact()
 		dateOfBirthError.innerHTML = "cannot be empty"
 		validInput = false;
 	}
+	else if(isNaN(parsedDate))
+	{
+		dateOfBirthError.innerHTML = "Invalid Date"
+		validInput = false;
+	}
+
 	if(address.trim() === "")
 	{
 		addressError.innerHTML = "cannot be empty"
@@ -314,6 +318,7 @@ function validateContact()
 
 function editContact(contactId)
 {
+	$("#select").val("").trigger("chosen:updated");
 	let titleError = document.getElementById("titleError");
 	let firstNameError = document.getElementById("firstNameError");
 	let lastNameError = document.getElementById("lastNameError");
@@ -343,13 +348,24 @@ function editContact(contactId)
 	pincodeError.innerHTML = "";
 	emailError.innerHTML = "";
 	phoneError.innerHTML = "";
-
+  
 	$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(returnValue) {
-			jsonObj = JSON.parse(returnValue);		 	
+		 jsonObj = JSON.parse(returnValue);	
+		 console.log(jsonObj);
+		 var roleArray = jsonObj.ROLESID;
+		 const multiSelect = document.getElementById("select");
+		Array.from(multiSelect.options).forEach(option => {       
+			if(roleArray.includes(parseInt(option.value)))
+			 {				
+            option.selected = true;
+				$("#select").trigger("chosen:updated");	
+			 }			
+		});
+		   
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
@@ -363,7 +379,8 @@ function editContact(contactId)
 			document.getElementById("pincode").value = jsonObj.PINCODE;
 			document.getElementById("email").value = jsonObj.EMAILID;
 			document.getElementById("phone").value = jsonObj.PHONENUMBER;
-			document.getElementById("distinguishButtons").value = jsonObj.CONTACTID;
+			document.getElementById("imagePathEdit").value = jsonObj.PHOTO;
+			document.getElementById("distinguishButtons").value = jsonObj.CONTACTID; 
 			document.getElementById("createContactText").innerHTML = "EDIT CONTACT";
 			document.getElementById("submit").innerHTML = "Save Changes";
    	 },
@@ -374,6 +391,7 @@ function editContact(contactId)
 
 function createContact()
 {
+	$("#select").val("").trigger("chosen:updated");
 	document.getElementById("createContactText").innerHTML = "CREATE CONTACT";
 	document.getElementById("form").reset();
 }
@@ -382,3 +400,12 @@ function printContact()
 {
 	window.print();
 }
+
+function refreshSelector()
+{
+	 $("#select").val("").trigger("chosen:updated");
+}
+
+ $(document).ready(function(){
+            $("#select").chosen();
+        })
