@@ -283,16 +283,15 @@
 						hiddenPhoto = form.imagePathEdit,
 						role = form.role)>						
 				<cfelse>					
-					<cfset uploadRelativePath = "./Images/Uploads/">
-					<cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
-					<cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
+					<cfset uploadRelativePath = "./Images/Uploads/">							
+					<cfset uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"photo")>
 					<cfset result = Application.contactObj.createContact(
 						title = form.title,
 						firstName = form.firstName,
 						lastName = form.lastName,
 						gender = form.gender,
 						dateOfBirth = form.dob,
-						photo = imagePath,
+						photo = uploadedImagePath,
 						Address = form.address,
 						street = form.street,
 						district = form.district,

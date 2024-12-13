@@ -1,5 +1,5 @@
  <cfcomponent >
-   <cffunction name="createContact" access="public" returntype="boolean" >
+   <cffunction name="createContact" access="public" returntype="boolean">
       <cfargument name="title" type="string" required="true">
       <cfargument name="firstName" type="string" required="true"> 
       <cfargument name="lastName" type="string" required="true"> 
@@ -14,67 +14,66 @@
       <cfargument name="pinCode" type="string" required="true">
       <cfargument name="email" type="string" required="true">
       <cfargument name="phone" type="string" required="true">
-      <cfargument  name="role" type="string" required="false">
+      <cfargument name="role" type="string" required="false">  
       <cftry>
-         <cfquery name="local.insertContact" result="local.record">
-            INSERT INTO Contact (
-               title,
-               firstName,
-               lastName,
-               gender,
-               dateOfBirth,
-               photo,
-               Address,
-               street,
-               district,
-               STATE,
-               nationality,
-               pinCode,
-               emailId,
-               phoneNumber,
-               _createdBy,
-               _updatedBy,
-               active
-	            )
-            VALUES (
-               <cfqueryparam value = "#arguments.title#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.lastName#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.gender#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.dateOfBirth#" cfsqltype = "cf_sql_date" >,
-               <cfqueryparam value = "#arguments.photo#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.Address#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.street#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.district#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.state#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.nationality#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.pinCode#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.email#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#arguments.phone#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "#session.userId#" cfsqltype = "cf_sql_varchar" >,
-               <cfqueryparam value = "1" cfsqltype = "cf_sql_integer" >
-                  )
-         </cfquery>       
-         <cfquery name="local.insertContactRole">        
-            <cfloop list="#arguments.role#" delimiters="," item="role">
-               INSERT
-               INTO contact_roles(contact_id, role_id)
-               VALUES (
-	            <cfqueryparam value = "#local.record.generatedKey#" cfsqltype = "cf_sql_integer" >,
-	            <cfqueryparam value = "#role#" cfsqltype = "cf_sql_varchar" >
-	                  );               
-            </cfloop>
-         </cfquery>      
-      <cfcatch type="any">
-      <cfoutput >
-          <p>#cfcatch.detail#</p>  
-      </cfoutput>        
-         <cfreturn false>               
-      </cfcatch>
-    </cftry>
+          <cfquery name="local.insertContact" result="local.record">
+              INSERT INTO Contact (
+                  title,
+                  firstName,
+                  lastName,
+                  gender,
+                  dateOfBirth,
+                  photo,
+                  Address,
+                  street,
+                  district,
+                  STATE,
+                  nationality,
+                  pinCode,
+                  emailId,
+                  phoneNumber,
+                  _createdBy,
+                  _updatedBy,
+                  active
+              )
+              VALUES (
+                  <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.firstName#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.lastName#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.gender#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.dateOfBirth#" cfsqltype="cf_sql_date">,
+                  <cfqueryparam value="#arguments.photo#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.Address#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.street#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.district#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.state#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.nationality#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.pinCode#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#arguments.phone#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_varchar">,
+                  <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+              )
+          </cfquery>  
+          <cfquery name="local.insertContactRole">
+              <cfloop list="#arguments.role#" delimiters="," item="role">
+                  INSERT INTO contact_roles (contact_id, role_id)
+                  VALUES (
+                      <cfqueryparam value="#local.record.generatedKey#" cfsqltype="cf_sql_integer">,
+                      <cfqueryparam value="#role#" cfsqltype="cf_sql_varchar">
+                  );
+              </cfloop>
+          </cfquery>  
+          <cfcatch type="any">
+              <cfoutput>
+                  <p>#cfcatch.detail#</p>
+              </cfoutput>
+              <cfreturn false>
+          </cfcatch>
+      </cftry>  
       <cfreturn true>
-   </cffunction>
+  </cffunction>  
 
    <cffunction name="fetchContacts" access="public" returntype="query">
       <cfargument name="userId" type="string" required="true">
@@ -169,13 +168,16 @@
     <cfreturn local.structContact>
 </cffunction>
 
-   <cffunction name="deleteContact" access="remote" returntype="void">      
-      <cfargument name="contactId" type="string" required="true">        
-      <cfquery name="local.deleteContact">
-         UPDATE
-          Contact SET active = 0 WHERE contactId = <cfqueryparam value = "#arguments.contactId#" cfsqltype = "cf_sql_integer" >
-      </cfquery>    
-   </cffunction>
+<cffunction name="deleteContact" access="remote" returntype="void">
+   <cfargument name="contactId" type="string" required="true">
+   <cfquery name="local.deleteContact">
+       UPDATE Contact
+       SET
+           active = 0
+       WHERE
+           contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_integer">
+   </cfquery>
+</cffunction>
 
    <cffunction name="editContact" access="public">
       <cfargument name="contactId" type="string" required="true">
@@ -197,9 +199,10 @@
       <cfargument name="role"  type="string" required="true">      
       <cfif len(arguments.photo)>            
          	<cfset local.uploadRelativePath = "./Images/Uploads/">
-				<cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
-				<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>	
-            <cfset local.photo = local.imagePath>
+				<!--- <cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
+				<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>	 --->
+            <cfset uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"photo")>
+            <cfset local.photo = local.uploadedImagePath>
       <cfelse>       
          <cfset local.photo = arguments.hiddenPhoto>
       </cfif>
@@ -254,5 +257,13 @@
             Role; 
       </cfquery>
       <cfreturn local.getRoles>
+   </cffunction>
+
+   <cffunction  name="uploadImage" access="public" returntype="string">
+      <cfargument name="pathForDownload" type="string"  required="true">
+      <cfargument name="inputName" type="string" required="true">
+      <cffile action="upload" destination="#expandPath(arguments.pathForDownload)#" nameconflict="makeUnique" filefield="#arguments.inputName#" result="newPath" >
+      <cfset local.imagePath = arguments.pathForDownload & #newPath.ServerFile#>
+      <cfreturn local.imagePath>
    </cffunction>
 </cfcomponent>
