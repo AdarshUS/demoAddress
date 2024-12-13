@@ -92,7 +92,7 @@
 												</tr>
 												<tr>
 													<th class="required">Contact Role</th>
-													<th></th>																								
+													<th></th>																																				
 												</tr>
 												<tr>
 													<td>
@@ -100,7 +100,8 @@
 															<cfloop  query="roles">															
 																<option value="#roles.roleId#">#roles.role#</option>
 															</cfloop>
-            										</select>																										
+            										</select>
+														<div id="RoleError" class="error"></div>
 													</td>
 												</tr>
 											</table>
@@ -282,16 +283,15 @@
 						hiddenPhoto = form.imagePathEdit,
 						role = form.role)>						
 				<cfelse>					
-					<cfset uploadRelativePath = "./Images/Uploads/">
-					<cffile action="upload" destination="#expandPath(uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
-					<cfset imagePath = uploadRelativePath & #newPath.ServerFile#>				
+					<cfset uploadRelativePath = "./Images/Uploads/">							
+					<cfset uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"photo")>
 					<cfset result = Application.contactObj.createContact(
 						title = form.title,
 						firstName = form.firstName,
 						lastName = form.lastName,
 						gender = form.gender,
 						dateOfBirth = form.dob,
-						photo = imagePath,
+						photo = uploadedImagePath,
 						Address = form.address,
 						street = form.street,
 						district = form.district,
@@ -321,10 +321,9 @@
 						<th></th>
 					</tr>
 					<cfset ormReload()>
-					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userid#})>
-					
+					<cfset contactsOrm = entityLoad("contactOrm",{_createdBy = #session.userid#,active=1})>					
 					<cfloop Array="#contactsOrm#" item = item>										
-					<tr>					   
+					<tr id="#item.getcontactId()#">					   
 						<td><img src="#item.getphoto()#" alt="profile" width="70" height="70" class="prof_pic"></td>
 						<td>#item.getfirstName() & " "&item.getlastName()#</td>
 						<td>#item.getemailId()#</td>

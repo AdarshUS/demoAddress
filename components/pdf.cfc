@@ -1,9 +1,9 @@
 <cfcomponent >
-   <cffunction name="getPdf" access="remote" returntype="string" returnformat="JSON">     
+   <cffunction name="getPdf" access="remote" returntype="struct" returnformat="JSON">     
       <cfset local.contacts = application.contactObj.fetchContacts(session.userId)>         
       <cfset local.fileName = "mypdf.pdf">
-      <cfset local.pdfFilePath = "../Files/" & local.fileName>
-      <cfset local.fileForDownload = "./Files/"&local.fileName>
+      <cfset local.pdfFilePath = "../Files/" & local.fileName>      
+      <cfset local.pdfPathUsernameStruct = structNew()>
       <cfdocument format="PDF" 
                   filename="#local.pdfFilePath#" 
                   overwrite="yes">
@@ -25,8 +25,7 @@
                      <th>pinCode</th>
                      <th>emailId</th>
                      <th>phoneNumber</th>
-                     <th>Role</th>
-                                      
+                     <th>Role</th>                                      
                   </tr>
             </thead>
             <tbody>                  
@@ -52,6 +51,9 @@
             </tbody>
          </table>
       </cfdocument>
-      <cfreturn local.fileForDownload>
+      <cfset local.pdfPathUsernameStruct["fileForDownload"] = "./Files/"&local.fileName>
+      <cfset local.currentTime= dateTimeFormat(now(),"dd-mm-yyyy-HH-nn-ss")>
+      <cfset local.pdfPathUsernameStruct["user"] = "#session.fullName##local.currentTime#">     
+      <cfreturn local.pdfPathUsernameStruct>
    </cffunction>
 </cfcomponent>
