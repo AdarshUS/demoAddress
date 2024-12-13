@@ -12,7 +12,7 @@
          action="update"
          task="birthdaymail"
          operation="HTTPRequest"
-         url="http://www.myaddressbook.localhost.org/components/birthdayWish.cfc?method=sendEmail&user=#session.userId#"
+         url="http://www.myaddressbook.localhost.org/components/birthdayWish.cfc?method=sendEmail&userId=#session.userId#"
          startDate="#DateFormat(Now(),'YYYY-MM-dd')#"               
          interval ="daily"
          repeat = "0"

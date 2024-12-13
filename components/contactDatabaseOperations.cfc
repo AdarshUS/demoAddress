@@ -98,7 +98,8 @@
             FROM Contact c
             INNER JOIN contact_roles cr ON c.contactId = cr.contact_id
             INNER JOIN ROLE r ON r.roleId = cr.role_id
-            WHERE c._createdBy = <cfqueryparam value="#arguments.userId#" cfsqltype="cf_sql_integer">           
+            WHERE c._createdBy = <cfqueryparam value="#arguments.userId#" cfsqltype="cf_sql_integer">
+            AND   c.active = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
             GROUP BY c.contactId
 	               ,c.title
 	               ,c.firstName
@@ -198,33 +199,31 @@
       <cfargument name="hiddenPhoto" type="string" required="true">
       <cfargument name="role"  type="string" required="true">      
       <cfif len(arguments.photo)>            
-         	<cfset local.uploadRelativePath = "./Images/Uploads/">
-				<!--- <cffile action="upload" destination="#expandPath(local.uploadRelativePath)#" nameconflict="makeUnique" filefield="photo" result="newPath" >
-				<cfset local.imagePath = local.uploadRelativePath & #newPath.ServerFile#>	 --->
-            <cfset uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"photo")>
+         	<cfset local.uploadRelativePath = "./Images/Uploads/">				
+            <cfset local.uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"photo")>
             <cfset local.photo = local.uploadedImagePath>
       <cfelse>       
          <cfset local.photo = arguments.hiddenPhoto>
       </cfif>
       <cfset local.todayDate = dateFormat(now(),"dd-mm-yyy")>      
      <cfquery name="local.editContact">
-    UPDATE Contact         
-    SET title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
-        firstName = <cfqueryparam value="#arguments.firstName#" cfsqltype="cf_sql_varchar">,
-        lastName = <cfqueryparam value="#arguments.lastName#" cfsqltype="cf_sql_varchar">,
-        gender = <cfqueryparam value="#arguments.gender#" cfsqltype="cf_sql_varchar">,
-        dateOfBirth = <cfqueryparam value="#arguments.dateOfBirth#" cfsqltype="cf_sql_date">,
-        photo = <cfqueryparam value="#local.photo#" cfsqltype="cf_sql_varchar">,
-        address = <cfqueryparam value="#arguments.address#" cfsqltype="cf_sql_varchar">,
-        street = <cfqueryparam value="#arguments.street#" cfsqltype="cf_sql_varchar">,
-        district = <cfqueryparam value="#arguments.district#" cfsqltype="cf_sql_varchar">,
-        state = <cfqueryparam value="#arguments.state#" cfsqltype="cf_sql_varchar">,
-        nationality = <cfqueryparam value="#arguments.nationality#" cfsqltype="cf_sql_varchar">,
-        pinCode = <cfqueryparam value="#arguments.pincode#" cfsqltype="cf_sql_varchar">,
-        emailId = <cfqueryparam value="#arguments.emailId#" cfsqltype="cf_sql_varchar">,
-        phoneNumber = <cfqueryparam value="#arguments.phoneNumber#" cfsqltype="cf_sql_varchar">,
-        _updatedOn = <cfqueryparam value="#local.todayDate#" cfsqltype="cf_sql_date">,
-    WHERE contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_integer">
+        UPDATE Contact         
+        SET title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
+            firstName = <cfqueryparam value="#arguments.firstName#" cfsqltype="cf_sql_varchar">,
+            lastName = <cfqueryparam value="#arguments.lastName#" cfsqltype="cf_sql_varchar">,
+            gender = <cfqueryparam value="#arguments.gender#" cfsqltype="cf_sql_varchar">,
+            dateOfBirth = <cfqueryparam value="#arguments.dateOfBirth#" cfsqltype="cf_sql_date">,
+            photo = <cfqueryparam value="#local.photo#" cfsqltype="cf_sql_varchar">,
+            address = <cfqueryparam value="#arguments.address#" cfsqltype="cf_sql_varchar">,
+            street = <cfqueryparam value="#arguments.street#" cfsqltype="cf_sql_varchar">,
+            district = <cfqueryparam value="#arguments.district#" cfsqltype="cf_sql_varchar">,
+            state = <cfqueryparam value="#arguments.state#" cfsqltype="cf_sql_varchar">,
+            nationality = <cfqueryparam value="#arguments.nationality#" cfsqltype="cf_sql_varchar">,
+            pinCode = <cfqueryparam value="#arguments.pincode#" cfsqltype="cf_sql_varchar">,
+            emailId = <cfqueryparam value="#arguments.emailId#" cfsqltype="cf_sql_varchar">,
+            phoneNumber = <cfqueryparam value="#arguments.phoneNumber#" cfsqltype="cf_sql_varchar">,
+            _updatedOn = <cfqueryparam value="#local.todayDate#" cfsqltype="cf_sql_date">
+        WHERE contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_integer">
    </cfquery>
    <cfquery name="local.deleteExistingRoles">
       DELETE
@@ -263,7 +262,7 @@
       <cfargument name="pathForDownload" type="string"  required="true">
       <cfargument name="inputName" type="string" required="true">
       <cffile action="upload" destination="#expandPath(arguments.pathForDownload)#" nameconflict="makeUnique" filefield="#arguments.inputName#" result="newPath" >
-      <cfset local.imagePath = arguments.pathForDownload & #newPath.ServerFile#>
+      <cfset local.imagePath = arguments.pathForDownload & #newPath.ServerFile#>     
       <cfreturn local.imagePath>
    </cffunction>
 </cfcomponent>
