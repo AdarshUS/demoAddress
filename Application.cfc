@@ -2,8 +2,7 @@
    <cfset this.sessionManagement = true>
    <cfset this.name = "myAddressBook">
    <cfset this.ormEnabled = true>
-   <cfset this.datasource = "cf_tutorial">
-   
+   <cfset this.datasource = "cf_tutorial">   
 
 <cffunction name="onApplicationStart" returnType="boolean">  
    <cfset application.pdfObj = new components.pdf()>
@@ -16,7 +15,7 @@
    <cffunction  name="onrequest" returntype="any">
     <cfargument name="requestpage">        
    <cfset onApplicationStart()>
-    <cfset local.arrayExclude = ["/index.cfm","/signUp.cfm","/loginSuccess.cfm","/scheduleBirthday.cfm","/schedule.cfm"]>
+    <cfset local.arrayExclude = ["/index.cfm","/signUp.cfm","/loginSuccess.cfm","/schedule.cfm"]>
     <cfif arrayContains(local.arrayExclude,arguments.requestpage)>
       <cfinclude  template="#arguments.requestpage#">
     <cfelseif structKeyExists(session, "userId")>

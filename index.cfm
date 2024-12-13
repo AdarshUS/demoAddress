@@ -48,10 +48,10 @@
                   <div class="imageContainer">
                      <img src="./Images/facebookLogo.png" alt="fb">
                      <a href="./loginSuccess.cfm"><img src="./Images/googleLogo.png" alt="googleLogo" height="48"></a>
-                  </div>               
+                  </div>
                   <div class="registerContainer">Don't have an account? <a href="./signUp.cfm">Register Here</a></div>
-               </div>            
-            </form>          
+               </div>
+            </form>            
             <cfif structKeyExists(form,"submit")>               
                <cfset result = Application.userObj.verifyUser(
                   userName = form.userName,

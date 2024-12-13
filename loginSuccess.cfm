@@ -21,7 +21,7 @@
         fullName = name,
         emailId = email,
         userName = username,
-        password = '',
+        password = '', 
         profilePhoto = image)>  
     <cfif isInserted> 
         <cfset session.fullName = name>

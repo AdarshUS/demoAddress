@@ -68,11 +68,15 @@ main{
 .profileContainer{
   width: 16%;
   background-color: #fff;
-  height: 222px;
+  height: fit-content;
   margin-right: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.upload_excelBtn{
+  margin: 9px;
 }
 
 .contactContainer{
@@ -227,6 +231,16 @@ input,select{
 
 .chosen-container{
   width: 116px !important;
+}
+
+.uploadExcelHeader{
+  border-bottom: 2px solid #367fba;
+  color: #367fba;
+  font-size: 19px;
+}
+
+.uploadExcelLabel{
+  color: #367fba;
 }
 
 
