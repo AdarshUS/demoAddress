@@ -243,6 +243,26 @@ input,select{
   color: #367fba;
 }
 
+.modal-foot{
+  padding: 30px;
+}
+
+.submitBtn{
+  background-color: #337ab9;
+  border: none;
+  color: #fff;
+  padding: 3px 11px;
+  border-radius: 20px;
+}
+
+.closeBtn{
+  background-color: #fff;
+  color: #337ab9;
+  border: 1px solid;
+  padding: 3px 11px;
+  border-radius: 20px;
+}
+
 
 @media print{
    header{

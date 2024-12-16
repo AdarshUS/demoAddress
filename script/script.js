@@ -12,7 +12,7 @@ $("#logout").click(function() {
             });
         }
 });
-$("#excel").click(function() {	
+$('#excel,#excelData').click(function() {	
 	 $.ajax({
     url: 'components/Excel.cfc?method=getExcel',
     type: 'POST',
@@ -41,9 +41,26 @@ $("#pdf").click(function() {
     },
     error: function() {              
     }
-});        
-		  
+	});		  
 });
+
+$("#submitBtn").click(function() {
+	$.ajax({
+    url: 'components/contactDatabaseOperations.cfc?method=getPdf',
+    type: 'POST',
+    success: function(result) {						
+		let jsonObj = JSON.parse(result);	
+		let a = document.createElement("a");
+		a.download = jsonObj.user;      
+		a.href = jsonObj.fileForDownload;
+		a.click();		          
+    },
+    error: function() {              
+    }
+	});		  
+});
+
+
 function validate()
 {
 	let validInput = true;
@@ -124,6 +141,62 @@ function validate()
 	return validInput;
 }
 
+function validateExcel() {
+    // Alert to test if the function is triggered
+    alert("Validating Excel file");
+
+    let validInput = true;
+
+    // Get the file input and error elements
+    let excelFile = document.getElementById("excelFile").value;
+    let excelFileError = document.getElementById("excelFileError");
+
+    // Clear any previous error messages
+    excelFileError.innerHTML = "";
+
+    // Check if a file is selected
+    if (excelFile.trim() === "") {
+        excelFileError.innerHTML = "Select a file to upload.";
+        validInput = false;
+    } else {
+        // Get the selected file
+        let excelFileElement = document.getElementById("excelFile");
+        let file = excelFileElement.files[0]; // Correct usage of 'files'
+
+        // Create FormData object
+        let formData = new FormData();
+        formData.append("excelFile", file);
+
+        // Log FormData entries (optional debugging)
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
+        // Send the file via AJAX
+        $.ajax({
+            url: 'components/contactDatabaseOperations.cfc?method=processExcel', // Update with your CFC's actual path
+            type: 'POST',
+            data: formData,
+            contentType: false, // Important for FormData
+            processData: false, // Prevent jQuery from processing the FormData
+            success: function (result) {
+                // Handle the success response
+                console.log("File processed successfully:", result);
+                alert("File uploaded successfully!");
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response
+                console.error("Error uploading file:", error);
+                alert("Failed to upload file.");
+            }
+        });
+    }
+
+    // Return false to prevent the form from submitting the default way
+    return false;
+}
+
+
 function viewData(contactId)
 {
 	
@@ -157,8 +230,7 @@ function deleteContact(contactId)
    	 url: 'components/contactDatabaseOperations.cfc?method=deleteContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
-   	 success: function() {
-			// location.reload();
+   	 success: function() {			
 			document.getElementById(contactId.value).remove();
    	 },
    	 error: function() {		
@@ -391,3 +463,24 @@ function refreshSelector()
  $(document).ready(function(){
    $("#select").chosen();
 })
+
+function downloadHeaders()
+{
+	$.ajax({
+    url: 'components/Excel.cfc?method=getExcelHeaders',
+    type: 'POST',	
+    success: function(result) {
+		let jsonObj = JSON.parse(result);          
+		let a = document.createElement("a");
+		a.download = jsonObj.user;      
+		a.href = jsonObj.fileForDownload;
+		a.click();						              
+    },
+    error: function() {        
+    }
+	});		           
+}
+
+$("#uploadBtn").click(function() {
+	$(".error").text("");
+});

@@ -66,7 +66,7 @@
             </form>           
             <cfif structKeyExists(form,"submitButton")>               
                <cfset uploadRelativePath = "./Images/Uploads/">				
-               <cfset uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"profile")>
+               <cfset uploadedImagePath = application.contactObj.uploadFile(uploadRelativePath,"profile")>
                <cfset inserted = Application.userObj.insertUser(
                   fullName = form.fullName,
                   emailId = form.email,
