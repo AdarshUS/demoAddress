@@ -79,42 +79,42 @@
       <cfargument name="userId" type="string" required="true">
       <cftry>
          <cfquery name="local.getContacts">
-            SELECT c.contactId
-	               ,c.title
-	               ,c.firstName
-	               ,c.lastName
-	               ,c.gender
-	               ,c.dateOfBirth
-	               ,c.photo
-	               ,c.Address
-	               ,c.street
-	               ,c.district
-	               ,c.STATE
-	               ,c.nationality
-	               ,c.pinCode
-	               ,c.emailId
-	               ,c.phoneNumber
-	               ,STRING_AGG(r.ROLE, ', ') AS roles
+            SELECT c.contactId,
+	               c.title,
+	               c.firstName,
+	               c.lastName,
+	               c.gender,
+	               c.dateOfBirth,
+	               c.photo,
+	               c.Address,
+	               c.street,
+	               c.district,
+	               c.STATE,
+	               c.nationality,
+	               c.pinCode,
+	               c.emailId,
+	               c.phoneNumber,
+	               STRING_AGG(r.ROLE, ', ') AS roles
             FROM Contact c
             INNER JOIN contact_roles cr ON c.contactId = cr.contact_id
             INNER JOIN ROLE r ON r.roleId = cr.role_id
             WHERE c._createdBy = <cfqueryparam value="#arguments.userId#" cfsqltype="cf_sql_integer">
             AND   c.active = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
-            GROUP BY c.contactId
-	               ,c.title
-	               ,c.firstName
-	               ,c.lastName
-	               ,c.gender
-	               ,c.dateOfBirth
-	               ,c.photo
-	               ,c.Address
-	               ,c.street
-	               ,c.district
-	               ,c.STATE
-	               ,c.nationality
-	               ,c.pinCode
-	               ,c.emailId
-	               ,c.phoneNumber               
+            GROUP BY c.contactId,
+	                 c.title,
+	                 c.firstName,
+	                 c.lastName,
+	                 c.gender,
+	                 c.dateOfBirth,
+	                 c.photo,
+	                 c.Address,
+	                 c.street,
+	                 c.district,
+	                 c.STATE,
+	                 c.nationality,
+	                 c.pinCode,
+	                 c.emailId,
+	                 c.phoneNumber               
          </cfquery>
       <cfcatch type="any">  
          <cfdump var="#cfcatch#" >                      
@@ -129,27 +129,27 @@
     <cfset local.structContact = structNew()>   
     <cfquery name="local.fetchAcontact">
        SELECT 
-            C.contactId, 
-            C.title, 
-            C.firstName, 
-            C.lastName, 
-            C.gender, 
-            C.dateOfBirth, 
-            C.photo, 
-            C.address, 
-            C.street, 
-            C.district, 
-            C.STATE, 
-            C.nationality, 
-            C.pinCode, 
-            C.emailId, 
-            C.phoneNumber, 
-            R.ROLE AS role, 
-            R.roleId
-      FROM Contact C
-      LEFT JOIN contact_roles CR ON C.contactId = CR.contact_id
-      LEFT JOIN ROLE R ON CR.role_id = R.roleId
-      WHERE C.contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_varchar">
+            c.contactId, 
+            c.title, 
+            c.firstName, 
+            c.lastName, 
+            c.gender, 
+            c.dateOfBirth, 
+            c.photo, 
+            c.address, 
+            c.street, 
+            c.district, 
+            c.STATE, 
+            c.nationality, 
+            c.pinCode, 
+            c.emailId, 
+            c.phoneNumber, 
+            r.ROLE AS role, 
+            r.roleId
+      FROM Contact c
+      LEFT JOIN contact_roles cr ON c.contactId = cr.contact_id
+      LEFT JOIN ROLE r ON cr.role_id = r.roleId
+      WHERE c.contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_varchar">
     </cfquery>    
     <cfset var colname = "">
     <cfloop list="#local.fetchAcontact.columnList#" index="colname">
@@ -208,7 +208,8 @@
       <cfset local.todayDate = dateFormat(now(),"dd-mm-yyy")>      
      <cfquery name="local.editContact">
         UPDATE Contact         
-        SET title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
+        SET 
+            title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
             firstName = <cfqueryparam value="#arguments.firstName#" cfsqltype="cf_sql_varchar">,
             lastName = <cfqueryparam value="#arguments.lastName#" cfsqltype="cf_sql_varchar">,
             gender = <cfqueryparam value="#arguments.gender#" cfsqltype="cf_sql_varchar">,
@@ -224,7 +225,7 @@
             phoneNumber = <cfqueryparam value="#arguments.phoneNumber#" cfsqltype="cf_sql_varchar">,
             _updatedOn = <cfqueryparam value="#local.todayDate#" cfsqltype="cf_sql_date">
         WHERE contactId = <cfqueryparam value="#arguments.contactId#" cfsqltype="cf_sql_integer">
-   </cfquery>
+    </cfquery>
    <cfquery name="local.deleteExistingRoles">
       DELETE
       FROM 

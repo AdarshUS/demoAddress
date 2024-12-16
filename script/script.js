@@ -17,18 +17,15 @@ $("#excel").click(function() {
     url: 'components/Excel.cfc?method=getExcel',
     type: 'POST',
     success: function(result) {
-
-	let jsonObj = JSON.parse(result);          
-	let a = document.createElement("a");
-	a.download = jsonObj.user;      
-	a.href = jsonObj.fileForDownload;
-	a.click();
-						              
+		let jsonObj = JSON.parse(result);          
+		let a = document.createElement("a");
+		a.download = jsonObj.user;      
+		a.href = jsonObj.fileForDownload;
+		a.click();						              
     },
     error: function() {        
     }
-});
-		           
+	});		           
 });
 $("#pdf").click(function() { 
 		
@@ -73,7 +70,6 @@ function validate()
 		nameError.textContent = "Name cannot be Empty";
 		validInput = false;
 	}
-
 	if(email.trim() === "")
 	{
 		mailError.textContent = "Email cannot be empty";
@@ -83,8 +79,7 @@ function validate()
 	{
 		mailError.textContent = "Invalid mail";
 		validInput = false;
-	}		
-	
+	}			
 	if(userName.trim() === "")
 	{
 		usernameError.textContent = "Username cannot be empty";
@@ -94,8 +89,7 @@ function validate()
 	{
 		usernameError.textContent = "Invalid Username";
 		validInput = false;
-	}	
-
+	}
 	if(password.trim() === "")
 	{
 		passwordError.textContent = "Password cannot be empty";
@@ -121,7 +115,6 @@ function validate()
 		passwordError.textContent = "Password should contain Atleast Six characters";
 		validInput = false;
 	}
-
 	if(password != confirmPassword)
 	{
 		passwordMatchError.textContent = "Password does'nt match";
@@ -244,12 +237,12 @@ function validateContact()
 	}
 	if(gender == "notSelect")
 	{
-		genderError.innerHTML = "gender cannot be empty"
+		genderError.innerHTML = "gender required"
 		validInput = false;
 	}
 	if(dateOfBirth.trim() === "")
 	{
-		dateOfBirthError.innerHTML = "dateOfBirth cannot be empty"
+		dateOfBirthError.innerHTML = "dateOfBirth required"
 		validInput = false;
 	}
 	else if(GivenDate > CurrentDate)
@@ -260,42 +253,42 @@ function validateContact()
 
 	if(address.trim() === "")
 	{
-		addressError.innerHTML = "address cannot be empty"
+		addressError.innerHTML = "address required"
 		validInput = false;
 	}
 	if(street.trim() === "")
 	{
-		streetError.innerHTML = "street cannot be empty"
+		streetError.innerHTML = "street required"
 		validInput = false;
 	}
 	if(district.trim() === "")
 	{
-		districtError.innerHTML = "cannot be empty"
+		districtError.innerHTML = "district required"
 		validInput = false;
 	}
 	if(state.trim() === "")
 	{
-		stateError.innerHTML = "state cannot be empty"
+		stateError.innerHTML = "state required"
 		validInput = false;
 	}
 	if(nationality.trim() === "")
 	{
-		nationalityError.innerHTML = "nationality cannot be empty"
+		nationalityError.innerHTML = "nationality required"
 		validInput = false;
 	}
 	if(pincode.trim() === "")
 	{
-		pincodeError.innerHTML = "pincode cannot be empty"
+		pincodeError.innerHTML = "pincode required"
 		validInput = false;
 	}
 	if(email.trim() === "")
 	{
-		emailError.innerHTML = "email cannot be empty"
+		emailError.innerHTML = "email required"
 		validInput = false;
 	}
 	if(phone.trim() === "")
 	{
-		phoneError.innerHTML = "phone cannot be empty"
+		phoneError.innerHTML = "phone required"
 		validInput = false;
 	}
 	if(role.trim() === "")
