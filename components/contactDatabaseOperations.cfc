@@ -268,7 +268,34 @@
 
    <cffunction name="processExcel"  access="remote" returnformat="JSON">
       <cfargument name="excelfile" required="true">
-      <cfspreadsheet  action="read" src="#arguments.excelfile#" query="local.excelResultQuery" headerrow="1" excludeHeaderRow="true">
-      <cfreturn local.excelResultQuery>
+      <cfspreadsheet  action="read" src="#arguments.excelfile#" query="local.excelQuery" headerrow="1" excludeHeaderRow="true">
+      <cfset local.excelResultQuery = queryNew("title,firstName,LastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber,roles,result","Varchar,Varchar,Varchar,Varchar,Date,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,varchar")>
+      <cfset local.requiredFields = ["title","firstName","LastName","gender","dateOfBirth","photo","Address","street","street","district","state","nationality","pinCode","emailId","phoneNumber","roles"]>
+      <cfloop query="local.excelQuery">
+        <cfset local.rowError = "">      
+        <cfloop array="#local.requiredFields#" index="column">
+            <cfif isNull(local.excelQuery[column])>
+               <cfset local.rowError = listAppend(local.rowError, column & " missing")>                            
+            </cfif>
+        </cfloop>
+        <cfset queryAddRow(local.excelResultQuery)>  
+        <cfset querySetCell(local.excelResultQuery, "title", title)>
+        <cfset querySetCell(local.excelResultQuery, "firstName", firstName)>
+        <cfset querySetCell(local.excelResultQuery, "lastName", lastName)>
+        <cfset querySetCell(local.excelResultQuery, "gender", gender)>
+        <cfset querySetCell(local.excelResultQuery, "dateOfBirth", dateOfBirth)>
+        <cfset querySetCell(local.excelResultQuery, "photo", photo)>
+        <cfset querySetCell(local.excelResultQuery, "Address", Address)>
+        <cfset querySetCell(local.excelResultQuery, "street", street)>
+        <cfset querySetCell(local.excelResultQuery, "district", district)>
+        <cfset querySetCell(local.excelResultQuery, "state", state)>
+        <cfset querySetCell(local.excelResultQuery, "nationality", nationality)>
+        <cfset querySetCell(local.excelResultQuery, "pinCode", pinCode)>
+        <cfset querySetCell(local.excelResultQuery, "emailId", emailId)>
+        <cfset querySetCell(local.excelResultQuery, "phoneNumber", phoneNumber)>
+        <cfset querySetCell(local.excelResultQuery, "roles", roles)>
+        <cfset querySetCell(local.excelResultQuery, "result", local.rowError)>
+      </cfloop>
+   <cfreturn local.excelResultQuery>
    </cffunction>
 </cfcomponent>
