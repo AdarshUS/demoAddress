@@ -44,23 +44,6 @@ $("#pdf").click(function() {
 	});		  
 });
 
-$("#submitBtn").click(function() {
-	$.ajax({
-    url: 'components/contactDatabaseOperations.cfc?method=getPdf',
-    type: 'POST',
-    success: function(result) {						
-		let jsonObj = JSON.parse(result);	
-		let a = document.createElement("a");
-		a.download = jsonObj.user;      
-		a.href = jsonObj.fileForDownload;
-		a.click();		          
-    },
-    error: function() {              
-    }
-	});		  
-});
-
-
 function validate()
 {
 	let validInput = true;
@@ -141,60 +124,38 @@ function validate()
 	return validInput;
 }
 
-function validateExcel() {
-    // Alert to test if the function is triggered
-    alert("Validating Excel file");
+document.getElementById("excelForm").addEventListener("submit", function (event) {
+	event.preventDefault(); // Prevent the default form submission
 
-    let validInput = true;
+	let excelFileElement = document.getElementById("excelFile");
+	let file = excelFileElement.files[0];
 
-    // Get the file input and error elements
-    let excelFile = document.getElementById("excelFile").value;
-    let excelFileError = document.getElementById("excelFileError");
+	if (!file) {
+			document.getElementById("excelFileError").textContent = "select a file to Upload";
+	}
 
-    // Clear any previous error messages
-    excelFileError.innerHTML = "";
+	const excelData = new FormData();
+	excelData.append("excelfile", file);
 
-    // Check if a file is selected
-    if (excelFile.trim() === "") {
-        excelFileError.innerHTML = "Select a file to upload.";
-        validInput = false;
-    } else {
-        // Get the selected file
-        let excelFileElement = document.getElementById("excelFile");
-        let file = excelFileElement.files[0]; // Correct usage of 'files'
+	$.ajax({
+			url: 'components/contactDatabaseOperations.cfc?method=processExcel',
+			type: 'POST',
+			data: excelData, 
+			contentType: false, 
+			processData: false, 
+			success: function (result) {
+					console.log("File uploaded successfully:", result);
+					document.getElementById("fileUploadFeedback").textContent = "File Uploaded Successfully";
+					document.getElementById("downloadIcon").style.display = "block";
+			},
+			error: function (xhr, status, error) {
+					console.error("Error during file upload:", status, error);
+					alert("There was an error processing the file.");
+			}
+	});
+});
 
-        // Create FormData object
-        let formData = new FormData();
-        formData.append("excelFile", file);
 
-        // Log FormData entries (optional debugging)
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
-
-        // Send the file via AJAX
-        $.ajax({
-            url: 'components/contactDatabaseOperations.cfc?method=processExcel', // Update with your CFC's actual path
-            type: 'POST',
-            data: formData,
-            contentType: false, // Important for FormData
-            processData: false, // Prevent jQuery from processing the FormData
-            success: function (result) {
-                // Handle the success response
-                console.log("File processed successfully:", result);
-                alert("File uploaded successfully!");
-            },
-            error: function (xhr, status, error) {
-                // Handle the error response
-                console.error("Error uploading file:", error);
-                alert("Failed to upload file.");
-            }
-        });
-    }
-
-    // Return false to prevent the form from submitting the default way
-    return false;
-}
 
 
 function viewData(contactId)

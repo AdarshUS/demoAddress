@@ -353,7 +353,7 @@
 									Upload Excel File								
 								</div>
 								<div>
-									<form method="POST" enctype="multipart/form-data" onsubmit="validateExcel()">
+									<form method="POST" enctype="multipart/form-data" id="excelForm">
 										<label class="uploadExcelLabel">Upload Excel*</label><br>
 										<input type="file" name="excelFile" id="excelFile">
 										<div class="error" id="excelFileError"></div>
@@ -363,6 +363,9 @@
 								<button type="submit" class="submitBtn" name="submitBtn" id="submitBtn">Submit</button>
 								</form>
 								<button type="button" class="closeBtn" data-bs-dismiss="modal">Close</button>
+								<div class="d-flex align-items-center p-3">
+									<div id="fileUploadFeedback" class="text-success"></div><i class="fa-solid fa-download downloadIcon p-1" id="downloadIcon"></i>
+								</div>								
 							</div>
 						</div>
 					</div>

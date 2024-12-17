@@ -266,10 +266,9 @@
       <cfreturn local.imagePath>
    </cffunction>
 
-   <cffunction name="processExcel"  access="remote">
-      <cfargument name="formData" type="string">
-      <cfspreadsheet  action="read" src="#arguments.formData#" query="excelResultQuery" headerrow="1" excludeHeaderRow="true">
-      <cfdump var="#excelResultQuery#" abort>
-
+   <cffunction name="processExcel"  access="remote" returnformat="JSON">
+      <cfargument name="excelfile" required="true">
+      <cfspreadsheet  action="read" src="#arguments.excelfile#" query="local.excelResultQuery" headerrow="1" excludeHeaderRow="true">
+      <cfreturn local.excelResultQuery>
    </cffunction>
 </cfcomponent>
