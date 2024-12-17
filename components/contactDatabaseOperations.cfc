@@ -79,8 +79,7 @@
       <cfargument name="userId" type="string" required="true">
       <cftry>
          <cfquery name="local.getContacts">
-            SELECT c.contactId,
-	               c.title,
+            SELECT c.title,
 	               c.firstName,
 	               c.lastName,
 	               c.gender,
@@ -200,7 +199,7 @@
       <cfargument name="role"  type="string" required="true">      
       <cfif len(arguments.photo)>            
          	<cfset local.uploadRelativePath = "./Images/Uploads/">				
-            <cfset local.uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"photo")>
+            <cfset local.uploadedImagePath = application.contactObj.uploadFile(uploadRelativePath,"photo")>
             <cfset local.photo = local.uploadedImagePath>
       <cfelse>       
          <cfset local.photo = arguments.hiddenPhoto>
@@ -259,11 +258,17 @@
       <cfreturn local.getRoles>
    </cffunction>
 
-   <cffunction  name="uploadImage" access="public" returntype="string">
-      <cfargument name="pathForDownload" type="string"  required="true">
+   <cffunction  name="uploadFile" access="remote" returntype="string">
+      <cfargument name="path" type="string"  required="true">
       <cfargument name="inputName" type="string" required="true">
-      <cffile action="upload" destination="#expandPath(arguments.pathForDownload)#" nameconflict="makeUnique" filefield="#arguments.inputName#" result="newPath" >
-      <cfset local.imagePath = arguments.pathForDownload & #newPath.ServerFile#>     
+      <cffile action="upload" destination="#expandPath(arguments.path)#" nameconflict="makeUnique" filefield="#arguments.inputName#" result="newPath" >
+      <cfset local.imagePath = arguments.path & #newPath.ServerFile#>     
       <cfreturn local.imagePath>
+   </cffunction>
+
+   <cffunction name="processExcel"  access="remote" returnformat="JSON">
+      <cfargument name="excelfile" required="true">
+      <cfspreadsheet  action="read" src="#arguments.excelfile#" query="local.excelResultQuery" headerrow="1" excludeHeaderRow="true">
+      <cfreturn local.excelResultQuery>
    </cffunction>
 </cfcomponent>

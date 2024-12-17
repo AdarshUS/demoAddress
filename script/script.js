@@ -12,7 +12,7 @@ $("#logout").click(function() {
             });
         }
 });
-$("#excel").click(function() {	
+$('#excel,#excelData').click(function() {	
 	 $.ajax({
     url: 'components/Excel.cfc?method=getExcel',
     type: 'POST',
@@ -41,9 +41,9 @@ $("#pdf").click(function() {
     },
     error: function() {              
     }
-});        
-		  
+	});		  
 });
+
 function validate()
 {
 	let validInput = true;
@@ -124,6 +124,40 @@ function validate()
 	return validInput;
 }
 
+document.getElementById("excelForm").addEventListener("submit", function (event) {
+	event.preventDefault(); // Prevent the default form submission
+
+	let excelFileElement = document.getElementById("excelFile");
+	let file = excelFileElement.files[0];
+
+	if (!file) {
+			document.getElementById("excelFileError").textContent = "select a file to Upload";
+	}
+
+	const excelData = new FormData();
+	excelData.append("excelfile", file);
+
+	$.ajax({
+			url: 'components/contactDatabaseOperations.cfc?method=processExcel',
+			type: 'POST',
+			data: excelData, 
+			contentType: false, 
+			processData: false, 
+			success: function (result) {
+					console.log("File uploaded successfully:", result);
+					document.getElementById("fileUploadFeedback").textContent = "File Uploaded Successfully";
+					document.getElementById("downloadIcon").style.display = "block";
+			},
+			error: function (xhr, status, error) {
+					console.error("Error during file upload:", status, error);
+					alert("There was an error processing the file.");
+			}
+	});
+});
+
+
+
+
 function viewData(contactId)
 {
 	
@@ -157,8 +191,7 @@ function deleteContact(contactId)
    	 url: 'components/contactDatabaseOperations.cfc?method=deleteContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
-   	 success: function() {
-			// location.reload();
+   	 success: function() {			
 			document.getElementById(contactId.value).remove();
    	 },
    	 error: function() {		
@@ -391,3 +424,24 @@ function refreshSelector()
  $(document).ready(function(){
    $("#select").chosen();
 })
+
+function downloadHeaders()
+{
+	$.ajax({
+    url: 'components/Excel.cfc?method=getExcelHeaders',
+    type: 'POST',	
+    success: function(result) {
+		let jsonObj = JSON.parse(result);          
+		let a = document.createElement("a");
+		a.download = jsonObj.user;      
+		a.href = jsonObj.fileForDownload;
+		a.click();						              
+    },
+    error: function() {        
+    }
+	});		           
+}
+
+$("#uploadBtn").click(function() {
+	$(".error").text("");
+});

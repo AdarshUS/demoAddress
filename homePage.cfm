@@ -37,7 +37,7 @@
 				<img src="#session.profilePhoto#" alt="profilepic" width="70" height="70">
 				<div class="profileName">#session.fullName#</div>
 				<button class="createCntBtn" data-bs-toggle="modal" data-bs-target="##exampleModal" type="button" onclick="createContact()">CREATE CONTACT</button>
-				<button class="btn btn-success upload_excelBtn" data-bs-toggle="modal" data-bs-target="##uploadExcelModal">Upload Excel</button>
+				<button class="btn btn-success upload_excelBtn" data-bs-toggle="modal" data-bs-target="##uploadExcelModal" id="uploadBtn">Upload Excel</button>
 				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -178,7 +178,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshSelector()">Close</button>
-								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>
+								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>;								
 							</div>							
 						</div>
 						</form>
@@ -283,9 +283,12 @@
 						phoneNumber = form.phone,
 						hiddenPhoto = form.imagePathEdit,
 						role = form.role)>						
-				<cfelse>					
+				<cfelse>
+					<cfif NOT structKeyExists(form, "photo")>
+						<cfset form.photo = "./Images/DefaultImage/profile.png" >
+					</cfif>
 					<cfset uploadRelativePath = "./Images/Uploads/">							
-					<cfset uploadedImagePath = application.contactObj.uploadImage(uploadRelativePath,"photo")>
+					<cfset uploadedImagePath = application.contactObj.uploadFile(uploadRelativePath,"photo")>
 					<cfset result = Application.contactObj.createContact(
 						title = form.title,
 						firstName = form.firstName,
@@ -343,24 +346,30 @@
 						<div class="modal-content">							
 							<div class="modal-body">
 								<div class="buttonContainer d-flex justify-content-end gap-2">
-									<button class="btn btn-primary">Template with Data</button>
-									<button class="btn btn-success">Plain Template</button>
+									<button class="btn btn-primary" id="excelData">Template with Data</button>
+									<button class="btn btn-success" onclick="downloadHeaders()">Plain Template</button>
 								</div>
 								<div class="uploadExcelHeader">
 									Upload Excel File								
 								</div>
 								<div>
-									<label class="uploadExcelLabel">Upload Excel*</label><br>
-									<input type="file">
+									<form method="POST" enctype="multipart/form-data" id="excelForm">
+										<label class="uploadExcelLabel">Upload Excel*</label><br>
+										<input type="file" name="excelFile" id="excelFile">
+										<div class="error" id="excelFileError"></div>
 								</div>
 							</div>
-							<div class="modal-footer">
-							<button type="button" class="btn btn-primary">Submit</button>
-								<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>								
+							<div class="modal-foot">
+								<button type="submit" class="submitBtn" name="submitBtn" id="submitBtn">Submit</button>
+								</form>
+								<button type="button" class="closeBtn" data-bs-dismiss="modal">Close</button>
+								<div class="d-flex align-items-center p-3">
+									<div id="fileUploadFeedback" class="text-success"></div><i class="fa-solid fa-download downloadIcon p-1" id="downloadIcon"></i>
+								</div>								
 							</div>
 						</div>
 					</div>
-				</div>
+				</div>				
 	</cfoutput>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
