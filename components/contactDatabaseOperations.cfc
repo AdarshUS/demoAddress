@@ -270,13 +270,13 @@
       <cfargument name="excelfile" required="true">
       <cfspreadsheet  action="read" src="#arguments.excelfile#" query="local.excelQuery" headerrow="1" excludeHeaderRow="true">
       <cfset local.excelResultQuery = queryNew("title,firstName,LastName,gender,dateOfBirth,photo,Address,street,district,state,nationality,pinCode,emailId,phoneNumber,roles,result","Varchar,Varchar,Varchar,Varchar,Date,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,varchar")>
-      <cfset local.requiredFields = ["title","firstName","LastName","gender","dateOfBirth","photo","Address","street","street","district","state","nationality","pinCode","emailId","phoneNumber","roles"]>
+      <cfset local.requiredFields = ["title","firstName","LastName","gender","dateOfBirth","photo","Address","street","district","state","nationality","pinCode","emailId","phoneNumber","roles"]>
       <cfloop query="local.excelQuery">
         <cfset local.rowError = "">      
-        <cfloop array="#local.requiredFields#" index="column">
-            <cfif isNull(local.excelQuery[column])>
+        <cfloop array="#local.requiredFields#" item="column">
+         <cfif not structKeyExists(local.excelQuery, column) OR len(trim(local.excelQuery[column][currentRow])) EQ 0>
                <cfset local.rowError = listAppend(local.rowError, column & " missing")>                            
-            </cfif>
+         </cfif>
         </cfloop>
         <cfset queryAddRow(local.excelResultQuery)>  
         <cfset querySetCell(local.excelResultQuery, "title", title)>
