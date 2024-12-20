@@ -125,7 +125,7 @@ function validate()
 }
 
 document.getElementById("excelForm").addEventListener("submit", function (event) {
-	event.preventDefault(); // Prevent the default form submission
+	event.preventDefault(); 
 
 	let excelFileElement = document.getElementById("excelFile");
 	let file = excelFileElement.files[0];
@@ -144,9 +144,18 @@ document.getElementById("excelForm").addEventListener("submit", function (event)
 			contentType: false, 
 			processData: false, 
 			success: function (result) {
+					let path = JSON.parse(result);
+					let fileName = "Upload_Result";
+					alert(path);
 					console.log("File uploaded successfully:", result);
 					document.getElementById("fileUploadFeedback").textContent = "File Uploaded Successfully";
 					document.getElementById("downloadIcon").style.display = "block";
+					$("#downloadIcon").click(function() { 
+								let a = document.createElement("a");				
+					a.download = fileName;      
+					a.href = path;
+					a.click();
+					}); 									            
 			},
 			error: function (xhr, status, error) {
 					console.error("Error during file upload:", status, error);
@@ -154,9 +163,6 @@ document.getElementById("excelForm").addEventListener("submit", function (event)
 			}
 	});
 });
-
-
-
 
 function viewData(contactId)
 {
@@ -444,4 +450,8 @@ function downloadHeaders()
 
 $("#uploadBtn").click(function() {
 	$(".error").text("");
+	$("#fileUploadFeedback").text("");
+   document.getElementById("downloadIcon").style.display = "none";
+	document.getElementById("excelForm").reset();
 });
+
