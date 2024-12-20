@@ -284,11 +284,11 @@
 						hiddenPhoto = form.imagePathEdit,
 						role = form.role)>						
 				<cfelse>
-					<cfif NOT structKeyExists(form, "photo")>
-						<cfset form.photo = "./Images/DefaultImage/profile.png" >
+					<cfset uploadedImagePath = "">
+					<cfif isDefined("form.photo") AND len(form.photo) GT 0>						
+						<cfset uploadRelativePath = "./Images/Uploads/">							
+						<cfset uploadedImagePath = application.contactObj.uploadFile(uploadRelativePath,"photo")>					
 					</cfif>
-					<cfset uploadRelativePath = "./Images/Uploads/">							
-					<cfset uploadedImagePath = application.contactObj.uploadFile(uploadRelativePath,"photo")>
 					<cfset result = Application.contactObj.createContact(
 						title = form.title,
 						firstName = form.firstName,
