@@ -249,8 +249,7 @@
                         <cfqueryparam value="#RoleItem#" cfsqltype="cf_sql_integer">
                      )
                </cfquery>
-            </cfloop>      
-            
+            </cfloop>            
    </cffunction>
 
    <cffunction name="fetchRoles" access="public" returntype="query">
@@ -274,12 +273,23 @@
 
    <cffunction name="processExcel" access="remote" returnformat="JSON">
     <cfargument name="excelfile" required="true">
-    <cfspreadsheet action="read" src="#arguments.excelfile#" query="local.excelQuery" headerrow="1" excludeHeaderRow="true">
-    <cfset local.excelResultQuery = queryNew("title,firstName,LastName,gender,dateOfBirth,Address,street,district,state,nationality,pinCode,emailId,phoneNumber,roles,result","Varchar,Varchar,Varchar,Varchar,Date,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar")>
-    <cfset local.requiredFields = ["title", "firstName", "LastName", "gender", "dateOfBirth", "Address", "street", "district", "state", "nationality", "pinCode", "emailId", "phoneNumber", "roles"]>
+    <cfspreadsheet action="read" src="#arguments.excelfile#" query="local.excelQuery" headerrow="1" excludeHeaderRow="true">    
+    <cfset local.excelResultQuery = queryNew("title,firstName,LastName,gender,dateOfBirth,Address,street,district,state,nationality,pincode,emailId,phoneNumber,roles,result","Varchar,Varchar,Varchar,Varchar,Date,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar")>
+    <cfset local.requiredFields = ["title", "firstName", "LastName", "gender", "dateOfBirth", "Address", "street", "district", "state", "nationality", "pincode", "emailId", "phoneNumber", "roles"]>
     <cfset local.titleList = ["Mr", "Miss", "Mrs"]>
     <cfset local.validGenders = ["Male", "Female", "Other"]>
     <cfset local.validEmailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|edu|gov)$">
+     <cfquery name="local.checkEmail">
+        SELECT *
+        FROM contact
+        WHERE
+            _createdBy = <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_varchar">
+            AND active = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+    </cfquery>   
+    <cfset local.queryEmailStruct = structNew()>
+    <cfloop query="#local.checkEmail#">
+        <cfset local.queryEmailStruct[local.checkEmail.emailId] = local.checkEmail.contactId>
+    </cfloop>    
     <cfloop query="local.excelQuery">
         <cfset local.rowError = "">
         <cfloop array="#local.requiredFields#" item="column">
@@ -296,6 +306,18 @@
         <cfif NOT reFindNoCase(local.validEmailRegex, local.excelQuery.emailId)>
             <cfset local.rowError = listAppend(local.rowError, "Invalid MailId")>
         </cfif>
+        <cftry>
+             <cfset parsedDate = ParseDateTime(local.excelQuery.dateOfBirth, "dd/mm/yyyy")>
+        <cfcatch>
+            <cfset local.rowError = listAppend(local.rowError, "Invalid Dob")>
+        </cfcatch>
+        </cftry>
+        <cfif NOT len(trim(local.excelQuery.pincode)) EQ 6>
+            <cfset local.rowError = listAppend(local.rowError, "Invalid pincode")>                  
+        </cfif>
+        <cfif NOT len(trim(local.excelQuery.phoneNumber)) EQ 10>
+             <cfset local.rowError = listAppend(local.rowError, "Invalid phoneNumber")>
+        </cfif>
         <cfset local.roleQry = application.contactObj.fetchRoles()>
         <cfset local.columnValues = valueList(local.roleQry.Role)>   
         <cfset local.roleIdList = "">
@@ -309,18 +331,11 @@
                     <cfset local.roleIdList = listAppend(local.roleIdList, local.roleQry.roleId)>
                 </cfif>
             </cfloop>
-        </cfloop>
-        <cfif len(trim(local.rowError)) EQ 0>
-            <cfquery name="local.checkEmail">
-                SELECT *
-                FROM contact
-                WHERE emailId = <cfqueryparam value="#local.excelQuery.emailId#" cfsqltype="cf_sql_varchar">
-                    AND _createdBy = <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_varchar">
-                    AND active = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
-            </cfquery>
-            <cfif local.checkEmail.recordCount>
+        </cfloop>        
+        <cfif len(trim(local.rowError)) EQ 0 >        
+            <cfif structKeyExists(local.queryEmailStruct, local.excelQuery.emailId.toString())>           
                 <cfset editContact(
-                    contactId = local.checkEmail.contactId,
+                    contactId = local.queryEmailStruct[local.excelQuery.emailId],
                     title = local.excelQuery.title,
                     firstName = local.excelQuery.firstName,
                     lastName = local.excelQuery.lastName,
@@ -357,7 +372,6 @@
                 <cfset local.rowError = "created">
             </cfif>
         </cfif>
-
         <cfset queryAddRow(local.excelResultQuery)>
         <cfset querySetCell(local.excelResultQuery, "title", title)>
         <cfset querySetCell(local.excelResultQuery, "firstName", firstName)>
