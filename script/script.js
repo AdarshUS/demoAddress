@@ -145,8 +145,7 @@ document.getElementById("excelForm").addEventListener("submit", function (event)
 			processData: false, 
 			success: function (result) {
 					let path = JSON.parse(result);
-					let fileName = "Upload_Result";
-					alert(path);
+					let fileName = "Upload_Result";					
 					console.log("File uploaded successfully:", result);
 					document.getElementById("fileUploadFeedback").textContent = "File Uploaded Successfully";
 					document.getElementById("downloadIcon").style.display = "block";

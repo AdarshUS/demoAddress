@@ -279,6 +279,7 @@
     <cfset local.titleList = ["Mr", "Miss", "Mrs"]>
     <cfset local.validGenders = ["Male", "Female", "Other"]>
     <cfset local.validEmailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|edu|gov)$">
+   
      <cfquery name="local.checkEmail">
         SELECT *
         FROM contact
@@ -289,7 +290,8 @@
     <cfset local.queryEmailStruct = structNew()>
     <cfloop query="#local.checkEmail#">
         <cfset local.queryEmailStruct[local.checkEmail.emailId] = local.checkEmail.contactId>
-    </cfloop>    
+    </cfloop>
+    <cfset QueryAddColumn(local.excelQuery, "result","Varchar",arrayNew(1))>
     <cfloop query="local.excelQuery">
         <cfset local.rowError = "">
         <cfloop array="#local.requiredFields#" item="column">
@@ -372,27 +374,12 @@
                 <cfset local.rowError = "created">
             </cfif>
         </cfif>
-        <cfset queryAddRow(local.excelResultQuery)>
-        <cfset querySetCell(local.excelResultQuery, "title", title)>
-        <cfset querySetCell(local.excelResultQuery, "firstName", firstName)>
-        <cfset querySetCell(local.excelResultQuery, "lastName", lastName)>
-        <cfset querySetCell(local.excelResultQuery, "gender", gender)>
-        <cfset querySetCell(local.excelResultQuery, "dateOfBirth", dateOfBirth)>
-        <cfset querySetCell(local.excelResultQuery, "Address", Address)>
-        <cfset querySetCell(local.excelResultQuery, "street", street)>
-        <cfset querySetCell(local.excelResultQuery, "district", district)>
-        <cfset querySetCell(local.excelResultQuery, "state", state)>
-        <cfset querySetCell(local.excelResultQuery, "nationality", nationality)>
-        <cfset querySetCell(local.excelResultQuery, "pinCode", pinCode)>
-        <cfset querySetCell(local.excelResultQuery, "emailId", emailId)>
-        <cfset querySetCell(local.excelResultQuery, "phoneNumber", phoneNumber)>
-        <cfset querySetCell(local.excelResultQuery, "roles", roles)>
-        <cfset querySetCell(local.excelResultQuery, "result", local.rowError)>
+        <cfset local.excelQuery.result[currentRow] = local.rowError>       
     </cfloop>
-    <cfset querySort(local.excelResultQuery, sortExcelQuery)>   
+    <cfset querySort(local.excelQuery, sortExcelQuery)>   
     <cfset local.fileName = "resultExcel.xlsx">
     <cfset local.exceFilePath = expandPath("../Files/" & local.fileName)>
-    <cfspreadsheet action="write" query="local.excelResultQuery" overwrite="yes" filename="#local.exceFilePath#">
+    <cfspreadsheet action="write" query="local.excelQuery" overwrite="yes" filename="#local.exceFilePath#">
     <cfset local.fileForDownload = "./Files/" & local.fileName>    
     <cfreturn local.fileForDownload>
 </cffunction>

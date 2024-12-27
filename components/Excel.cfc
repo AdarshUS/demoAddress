@@ -12,11 +12,8 @@
    </cffunction>
 
    <cffunction name="getExcelHeaders"  access="remote" returntype="struct" returnformat="JSON">		
-      <cfset local.contacts =application.contactObj.fetchContacts(session.userId)>
-      <cfset queryDeleteColumn(local.contacts, "photo")>
-      <cfset local.allColumns = local.contacts.getColumnList()>
-       <cfset local.excludedColumn = "photo">  
-      <cfset local.headersOnlyQuery = QueryNew(ArrayToList(local.allColumns))> 
+    
+      <cfset local.headersOnlyQuery = QueryNew("Title,FirstName,LastName,Gender,DateOfBirth,Address,Street,District,State,Nationality,pincode,EmailId,PhoneNumber,Roles")> 
       <cfset local.fileName = "myContactSheet.xlsx">
       <cfset local.exceFilePath = expandPath("../Files/"&local.fileName)>
       <cfset local.excelPathUsernameStruct = structNew()>      
