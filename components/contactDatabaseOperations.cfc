@@ -19,8 +19,7 @@
          <cfset local.image = "./Images/DefaultImage/profile.png">        
       <cfelse>
           <cfset local.image = arguments.photo>          
-      </cfif>
-      <cfdump var="#arguments.role#">     
+      </cfif>       
       <cftry>
           <cfquery name="local.insertContact" result="local.record">
               INSERT INTO Contact (
@@ -210,7 +209,7 @@
             <cfelse>               
                   <cfset local.photo = arguments.hiddenPhoto>              
             </cfif>
-            <cfset local.todayDate = dateFormat(now(),"dd-mm-yyy")>   <!--- below --->
+            <cfset local.todayDate = dateFormat(now(),"dd-mm-yyy")> 
             <cfquery name="local.editContact">
               UPDATE Contact         
               SET 
@@ -250,8 +249,7 @@
                         <cfqueryparam value="#RoleItem#" cfsqltype="cf_sql_integer">
                      )
                </cfquery>
-            </cfloop>      
-            
+            </cfloop>            
    </cffunction>
 
    <cffunction name="fetchRoles" access="public" returntype="query">
@@ -273,101 +271,147 @@
       <cfreturn local.imagePath>
    </cffunction>
 
-   <cffunction name="processExcel"  access="remote" returnformat="JSON">
-      <cfargument name="excelfile" required="true">
-      <cfspreadsheet  action="read" src="#arguments.excelfile#" query="local.excelQuery" headerrow="1" excludeHeaderRow="true">      
-      <cfset local.excelResultQuery = queryNew("title,firstName,LastName,gender,dateOfBirth,Address,street,district,state,nationality,pinCode,emailId,phoneNumber,roles,result","Varchar,Varchar,Varchar,Varchar,Date,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,varchar")>
-      <cfset local.requiredFields = ["title","firstName","LastName","gender","dateOfBirth","Address","street","district","state","nationality","pinCode","emailId","phoneNumber","roles"]>
-      <cfdump  var="#local.excelQuery#"> 
-      <cfloop query="local.excelQuery">
-         <cfset local.rowError = "">
-         <cfloop array="#local.requiredFields#" item="column">
+   <cffunction name="processExcel" access="remote" returnformat="JSON">
+    <cfargument name="excelfile" required="true">
+    <cfspreadsheet action="read" src="#arguments.excelfile#" query="local.excelQuery" headerrow="1" excludeHeaderRow="true">    
+    <cfset local.excelResultQuery = queryNew("title,firstName,LastName,gender,dateOfBirth,Address,street,district,state,nationality,pincode,emailId,phoneNumber,roles,result","Varchar,Varchar,Varchar,Varchar,Date,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar,Varchar")>
+    <cfset local.requiredFields = ["title", "firstName", "LastName", "gender", "dateOfBirth", "Address", "street", "district", "state", "nationality", "pincode", "emailId", "phoneNumber", "roles"]>
+    <cfset local.titleList = ["Mr", "Miss", "Mrs"]>
+    <cfset local.validGenders = ["Male", "Female", "Other"]>
+    <cfset local.validEmailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|edu|gov)$">
+     <cfquery name="local.checkEmail">
+        SELECT *
+        FROM contact
+        WHERE
+            _createdBy = <cfqueryparam value="#session.userId#" cfsqltype="cf_sql_varchar">
+            AND active = <cfqueryparam value="1" cfsqltype="cf_sql_integer">
+    </cfquery>   
+    <cfset local.queryEmailStruct = structNew()>
+    <cfloop query="#local.checkEmail#">
+        <cfset local.queryEmailStruct[local.checkEmail.emailId] = local.checkEmail.contactId>
+    </cfloop>    
+    <cfloop query="local.excelQuery">
+        <cfset local.rowError = "">
+        <cfloop array="#local.requiredFields#" item="column">
             <cfif len(trim(local.excelQuery[column][currentRow])) EQ 0>
-                  <cfset local.rowError = listAppend(local.rowError, column & " missing")>         
-            </cfif>            
-         </cfloop>         
-         <cfset local.roleQry = application.contactObj.fetchRoles()>
-         <cfset local.columnValues = valueList( local.roleQry.Role)>
-         <cfset local.roleIdList = "">
-         <cfloop list="#local.excelQuery.Roles.toString()#" index="local.role" delimiters=",">            
-            <cfif NOT listFind(local.columnValues,local.role)>
-                <cfset local.rowError = listAppend(local.rowError,"invalid role")>
-            </cfif>            
-            <cfloop query="local.roleQry">
-               <cfif local.role EQ local.roleQry.role>
-                  <cfset local.roleIdList = listAppend(local.roleIdList,local.roleQry.roleId)>
-               </cfif>            
-            </cfloop>           
-         </cfloop>          
-         <cfif len(trim(local.rowError)) EQ 0>
-            <cfquery name="local.checkEmail">
-               SELECT *
-               FROM
-               contact
-               WHERE emailId = <cfqueryparam value = "#local.excelQuery.emailId#" cfsqltype="cf_sql_varchar">
-                     AND _createdBy = <cfqueryparam value = "#session.userId#" cfsqltype="cf_sql_varchar">
-            </cfquery>
-            
-            <cfif local.checkEmail.recordCount>           
-               <cfset editContact(
-                  contactId = local.checkEmail.contactId,
-                  title= local.excelQuery.title,
-                  firstName=  local.excelQuery.firstName,
-                  lastName=  local.excelQuery.lastName,
-                  gender=  local.excelQuery.gender,
-                  dateOfBirth=  local.excelQuery.dateOfBirth,                 
-                  address =  local.excelQuery.Address,
-                  street =  local.excelQuery.street,
-                  district =  local.excelQuery.district,
-                  state =  local.excelQuery.state,
-                  nationality =  local.excelQuery.nationality,
-                  pinCode =  local.excelQuery.pinCode,
-                  emailId =  local.excelQuery.emailId,
-                  phoneNumber =  local.excelQuery.phoneNumber,
-                  role =  local.roleIdList)>
-               <cfset local.rowError ="updated">              
-            <cfelse>
-               <cfdump var="#local.excelQuery.emailId#">
-               <cfset application.contactObj.createContact(
-                 title = local.excelQuery.title,
-                 firstName = local.excelQuery.firstName,
-                 lastName =  local.excelQuery.lastName,
-                 gender = local.excelQuery.gender,
-                 dateOfBirth = local.excelQuery.dateOfBirth,
-                 Address = local.excelQuery.Address,
-                 street = local.excelQuery.street,
-                 district = local.excelQuery.district,
-                 state = local.excelQuery.state,
-                 nationality = local.excelQuery.nationality,
-                 pinCode = local.excelQuery.pinCode,
-                 email = local.excelQuery.emailId,
-                 phone = local.excelQuery.phoneNumber,
-                 role = local.roleIdList)>
-               <cfset local.rowError ="created">
+                <cfset local.rowError = listAppend(local.rowError, column & " missing")>
             </cfif>
-         </cfif>
-         <cfset queryAddRow(local.excelResultQuery)>  
-         <cfset querySetCell(local.excelResultQuery, "title", title)>
-         <cfset querySetCell(local.excelResultQuery, "firstName", firstName)>
-         <cfset querySetCell(local.excelResultQuery, "lastName", lastName)>
-         <cfset querySetCell(local.excelResultQuery, "gender", gender)>
-         <cfset querySetCell(local.excelResultQuery, "dateOfBirth", dateOfBirth)>         
-         <cfset querySetCell(local.excelResultQuery, "Address", Address)>
-         <cfset querySetCell(local.excelResultQuery, "street", street)>
-         <cfset querySetCell(local.excelResultQuery, "district", district)>
-         <cfset querySetCell(local.excelResultQuery, "state", state)>
-         <cfset querySetCell(local.excelResultQuery, "nationality", nationality)>
-         <cfset querySetCell(local.excelResultQuery, "pinCode", pinCode)>
-         <cfset querySetCell(local.excelResultQuery, "emailId", emailId)>
-         <cfset querySetCell(local.excelResultQuery, "phoneNumber", phoneNumber)>
-         <cfset querySetCell(local.excelResultQuery, "roles", roles)>
-         <cfset querySetCell(local.excelResultQuery, "result", local.rowError)>
-      </cfloop>
-      <cfdump var="#local.excelResultQuery#">
-      <cfset local.fileName = "resultExcel.xlsx">
-      <cfset local.exceFilePath = expandPath("../Files/"&local.fileName)>           
-      <cfspreadsheet  action="write" query="local.excelResultQuery" overwrite="yes" filename="#local.exceFilePath#">
-      <cfset local.fileForDownload = "./Files/"&local.fileName>
-   <cfreturn local.excelResultQuery>
-   </cffunction>
+        </cfloop>
+        <cfif NOT listFind(arrayToList(local.titleList), local.excelQuery.title)>
+            <cfset local.rowError = listAppend(local.rowError, "Invalid title")>
+        </cfif>
+        <cfif NOT listFind(arrayToList(local.validGenders), local.excelQuery.gender)>
+            <cfset local.rowError = listAppend(local.rowError, "Invalid gender")>
+        </cfif>
+        <cfif NOT reFindNoCase(local.validEmailRegex, local.excelQuery.emailId)>
+            <cfset local.rowError = listAppend(local.rowError, "Invalid MailId")>
+        </cfif>
+        <cftry>
+             <cfset parsedDate = ParseDateTime(local.excelQuery.dateOfBirth, "dd/mm/yyyy")>
+        <cfcatch>
+            <cfset local.rowError = listAppend(local.rowError, "Invalid Dob")>
+        </cfcatch>
+        </cftry>
+        <cfif NOT len(trim(local.excelQuery.pincode)) EQ 6>
+            <cfset local.rowError = listAppend(local.rowError, "Invalid pincode")>                  
+        </cfif>
+        <cfif NOT len(trim(local.excelQuery.phoneNumber)) EQ 10>
+             <cfset local.rowError = listAppend(local.rowError, "Invalid phoneNumber")>
+        </cfif>
+        <cfset local.roleQry = application.contactObj.fetchRoles()>
+        <cfset local.columnValues = valueList(local.roleQry.Role)>   
+        <cfset local.roleIdList = "">
+        <cfloop list="#local.excelQuery.Roles.toString()#" index="local.role" delimiters=",">
+            <cfif NOT listFind(local.columnValues, local.role)>
+                <cfset local.rowError = listAppend(local.rowError, "invalid role")>
+                <cfbreak>
+            </cfif>
+            <cfloop query="local.roleQry">
+                <cfif local.role EQ local.roleQry.role>
+                    <cfset local.roleIdList = listAppend(local.roleIdList, local.roleQry.roleId)>
+                </cfif>
+            </cfloop>
+        </cfloop>        
+        <cfif len(trim(local.rowError)) EQ 0 >        
+            <cfif structKeyExists(local.queryEmailStruct, local.excelQuery.emailId.toString())>           
+                <cfset editContact(
+                    contactId = local.queryEmailStruct[local.excelQuery.emailId],
+                    title = local.excelQuery.title,
+                    firstName = local.excelQuery.firstName,
+                    lastName = local.excelQuery.lastName,
+                    gender = local.excelQuery.gender,
+                    dateOfBirth = local.excelQuery.dateOfBirth,
+                    address = local.excelQuery.Address,
+                    street = local.excelQuery.street,
+                    district = local.excelQuery.district,
+                    state = local.excelQuery.state,
+                    nationality = local.excelQuery.nationality,
+                    pinCode = local.excelQuery.pinCode,
+                    emailId = local.excelQuery.emailId,
+                    phoneNumber = local.excelQuery.phoneNumber,
+                    role = local.roleIdList
+                )>
+                <cfset local.rowError = "updated">
+            <cfelse>
+                <cfset application.contactObj.createContact(
+                    title = local.excelQuery.title,
+                    firstName = local.excelQuery.firstName,
+                    lastName = local.excelQuery.lastName,
+                    gender = local.excelQuery.gender,
+                    dateOfBirth = local.excelQuery.dateOfBirth,
+                    Address = local.excelQuery.Address,
+                    street = local.excelQuery.street,
+                    district = local.excelQuery.district,
+                    state = local.excelQuery.state,
+                    nationality = local.excelQuery.nationality,
+                    pinCode = local.excelQuery.pinCode,
+                    email = local.excelQuery.emailId,
+                    phone = local.excelQuery.phoneNumber,
+                    role = local.roleIdList
+                )>
+                <cfset local.rowError = "created">
+            </cfif>
+        </cfif>
+        <cfset queryAddRow(local.excelResultQuery)>
+        <cfset querySetCell(local.excelResultQuery, "title", title)>
+        <cfset querySetCell(local.excelResultQuery, "firstName", firstName)>
+        <cfset querySetCell(local.excelResultQuery, "lastName", lastName)>
+        <cfset querySetCell(local.excelResultQuery, "gender", gender)>
+        <cfset querySetCell(local.excelResultQuery, "dateOfBirth", dateOfBirth)>
+        <cfset querySetCell(local.excelResultQuery, "Address", Address)>
+        <cfset querySetCell(local.excelResultQuery, "street", street)>
+        <cfset querySetCell(local.excelResultQuery, "district", district)>
+        <cfset querySetCell(local.excelResultQuery, "state", state)>
+        <cfset querySetCell(local.excelResultQuery, "nationality", nationality)>
+        <cfset querySetCell(local.excelResultQuery, "pinCode", pinCode)>
+        <cfset querySetCell(local.excelResultQuery, "emailId", emailId)>
+        <cfset querySetCell(local.excelResultQuery, "phoneNumber", phoneNumber)>
+        <cfset querySetCell(local.excelResultQuery, "roles", roles)>
+        <cfset querySetCell(local.excelResultQuery, "result", local.rowError)>
+    </cfloop>
+    <cfset querySort(local.excelResultQuery, sortExcelQuery)>   
+    <cfset local.fileName = "resultExcel.xlsx">
+    <cfset local.exceFilePath = expandPath("../Files/" & local.fileName)>
+    <cfspreadsheet action="write" query="local.excelResultQuery" overwrite="yes" filename="#local.exceFilePath#">
+    <cfset local.fileForDownload = "./Files/" & local.fileName>    
+    <cfreturn local.fileForDownload>
+</cffunction>
+
+<cffunction name="sortExcelQuery" access="private">
+   <cfargument name="row1" >
+   <cfargument name="row2" >
+   <cfset local.rowPriority = {"updated":1,"created":2}>
+   <cfif structKeyExists(local.rowPriority,arguments.row1.result)>
+      <cfset local.value1 = local.rowPriority[arguments.row1.result]>
+   <cfelse>
+      <cfset local.value1 = 0>
+   </cfif>
+    <cfif structKeyExists(local.rowPriority,arguments.row2.result)>
+      <cfset local.value2 = local.rowPriority[arguments.row2.result]>
+   <cfelse>
+      <cfset local.value2 = 0>
+   </cfif>
+   <cfreturn compare(local.value1,local.value2)>
+</cffunction>
+   
 </cfcomponent>
