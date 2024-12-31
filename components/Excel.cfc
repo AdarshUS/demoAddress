@@ -23,4 +23,4 @@
       <cfset local.excelPathUsernameStruct["user"] = "Plain_Template.xlsx">      
       <cfreturn local.excelPathUsernameStruct>
    </cffunction>
-</cfcomponent>
+</cfcomponent> 

@@ -1,13 +1,13 @@
 <cfcomponent >
    <cffunction name="getPdf" access="remote" returntype="struct" returnformat="JSON">     
-      <cfset local.contacts = application.contactObj.fetchContacts(session.userId)>         
+      <cfset local.contacts = application.contactObj.fetchContacts(session.userId)>      
       <cfset local.fileName = "mypdf.pdf">
       <cfset local.pdfFilePath = "../Files/" & local.fileName>      
       <cfset local.pdfPathUsernameStruct = structNew()>
       <cfdocument format="PDF" 
                   filename="#local.pdfFilePath#" 
                   overwrite="yes">
-         <h1>My Contacts</h1>
+         <h1>My Contacts</h1>        
          <table border="1" cellpadding="5" cellspacing="0">
             <thead>
                   <tr>
@@ -15,7 +15,7 @@
                      <th>firstName</th>
                      <th>lastName</th>
                      <th>gender</th>
-                     <td>dateOfBirth</td>
+                     <th>dateOfBirth</th>
                      <th>photo</th>
                      <th>Address</th>
                      <th>street</th>

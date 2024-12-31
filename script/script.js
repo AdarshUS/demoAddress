@@ -148,12 +148,12 @@ document.getElementById("excelForm").addEventListener("submit", function (event)
 					let fileName = "Upload_Result";					
 					console.log("File uploaded successfully:", result);
 					document.getElementById("fileUploadFeedback").textContent = "File Uploaded Successfully";
-					document.getElementById("downloadIcon").style.display = "block";
+					document.getElementById("downloadIcon").style.display = "block";					
 					$("#downloadIcon").click(function() { 
-								let a = document.createElement("a");				
-					a.download = fileName;      
-					a.href = path;
-					a.click();
+						let a = document.createElement("a");				
+						a.download = fileName;      
+						a.href = path;
+						a.click();
 					}); 									            
 			},
 			error: function (xhr, status, error) {
@@ -164,8 +164,7 @@ document.getElementById("excelForm").addEventListener("submit", function (event)
 });
 
 function viewData(contactId)
-{
-	
+{	
 	$.ajax({
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
@@ -324,6 +323,19 @@ function validateContact()
 		emailError.innerHTML = "email required"
 		validInput = false;
 	}
+	else
+	{
+		$.ajax({
+    	url: 'components/contactDatabaseOperations.cfc?method=existingContacts',
+    	type: 'POST',
+	 	data :  {email:email,phone:phone},
+    	success: function(result) {	
+			alert(result)							              
+    	},
+    	error: function() {        
+    	}
+	});		           
+	}
 	if(phone.trim() === "")
 	{
 		phoneError.innerHTML = "phone required"
@@ -332,7 +344,10 @@ function validateContact()
 	if(role.trim() === "")
 	{
 		roleError.innerHTML = "select any Role"
-	}	
+	}
+	if()
+	
+
 	return validInput;
 }
 
@@ -367,15 +382,14 @@ function editContact(contactId)
 	nationalityError.innerHTML = "";
 	pincodeError.innerHTML = "";
 	emailError.innerHTML = "";
-	phoneError.innerHTML = "";
-  
+	phoneError.innerHTML = "";  
 	$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
    	 type: 'POST',
    	 data: {contactId:contactId.value},
    	 success: function(returnValue) {
-		 jsonObj = JSON.parse(returnValue);	
-		 console.log(jsonObj);
+		 jsonObj = JSON.parse(returnValue);	    
+		 console.log(jsonObj);		
 		 var roleArray = jsonObj.ROLESID;
 		 const multiSelect = document.getElementById("select");
 		Array.from(multiSelect.options).forEach(option => {       
@@ -388,7 +402,7 @@ function editContact(contactId)
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
-			document.getElementById("gender").value = jsonObj.GENDER;
+			document.getElementById(jsonObj.GENDER).selected = true;``
 			document.getElementById("dob").value = jsonObj.DATEOFBIRTH;			
 			document.getElementById("address").value = jsonObj.ADDRESS;
 			document.getElementById("street").value = jsonObj.STREET;
@@ -452,5 +466,9 @@ $("#uploadBtn").click(function() {
 	$("#fileUploadFeedback").text("");
    document.getElementById("downloadIcon").style.display = "none";
 	document.getElementById("excelForm").reset();
+});
+
+$(".closeBtn").click(function() {
+	location.reload();
 });
 

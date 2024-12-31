@@ -123,7 +123,7 @@
       <cfcatch type="any">  
          <cfdump var="#cfcatch#" >                      
       </cfcatch>              
-      </cftry>
+      </cftry>     
       <cfreturn local.getContacts>
    </cffunction>
    
@@ -375,7 +375,7 @@
             </cfif>
         </cfif>
         <cfset local.excelQuery.result[currentRow] = local.rowError>       
-    </cfloop>
+    </cfloop>    
     <cfset querySort(local.excelQuery, sortExcelQuery)>   
     <cfset local.fileName = "resultExcel.xlsx">
     <cfset local.exceFilePath = expandPath("../Files/" & local.fileName)>
@@ -400,5 +400,23 @@
    </cfif>
    <cfreturn compare(local.value1,local.value2)>
 </cffunction>
-   
+
+<cffunction name="checkExistingContacts" access="remote" returntype="boolean" returnformat="plain">
+    <cfargument name="email" >
+    <cfargument name="phone" >
+    <cfquery name="local.existingContacts">
+        SELECT 
+            *
+        FROM
+            Contact
+        WHERE 
+            emailId = <cfqueryparam  value="#arguments.email#" cfsqltype="cf_sql_varchar"> OR
+            phoneNumber = <cfqueryparam  value="#arguments.phone#" cfsqltype="cf_sql_varchar"> 
+            AND _createdBy = #session.userId#
+    </cfquery>
+    <cfif local.existingContacts.RecordCount>
+        <cfreturn true>
+    </cfif>
+    <cfreturn false>
+</cffunction>
 </cfcomponent>

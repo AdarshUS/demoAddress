@@ -80,9 +80,9 @@
 													<td colspan="2">
 														<select name="gender" id="gender">
 															<option value="notSelect"></option>
-															<option value="male">Male</option>
-															<option value="female">Female</option>
-															<option value="other">Other</option>													
+															<option value="male" id="Male">Male</option>
+															<option value="female" id="Female">Female</option>
+															<option value="other" id="Other">Other</option>													
 														</select>
 														<div id="genderError" class="error"></div>
 													</td>
@@ -178,7 +178,8 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshSelector()">Close</button>
-								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>;								
+								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>
+								<div id="cntExistError"></div>
 							</div>							
 						</div>
 						</form>
@@ -308,7 +309,7 @@
 					<cfif NOT result>
 						<p>Contact Already Exists</p>						
 					<cfelse>
-						<cflocation  url="./homePage.cfm">
+						<cflocation  url="./homePage.cfm" addtoken="false">
 					</cfif>					
 				</cfif>																			
 			</cfif>
