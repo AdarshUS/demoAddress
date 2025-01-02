@@ -264,7 +264,7 @@
 				</div>
 			</div>
 			<cfif structKeyExists(form,"submit")>			 
-				<cfif LEN(form.distinguishButtons) GT 1>					
+				<cfif LEN(form.distinguishButtons) GT 1>				
 					<cfset Application.contactObj.editContact(
 						contactId = form.distinguishButtons,
 						title = form.title,
@@ -283,7 +283,7 @@
 						phoneNumber = form.phone,
 						hiddenPhoto = form.imagePathEdit,
 						role = form.role)>						
-				<cfelse>
+				<cfelse>					
 					<cfset uploadedImagePath = "">
 					<cfif isDefined("form.photo") AND len(form.photo) GT 0>						
 						<cfset uploadRelativePath = "./Images/Uploads/">							
@@ -310,7 +310,7 @@
 					<cfelse>
 						<cflocation  url="./homePage.cfm" addtoken="no">
 					</cfif>					
-				</cfif>																			
+				</cfif>			
 			</cfif>
 			<cfset AllContacts = Application.contactObj.fetchContacts(userId = session.userid)>				
 			<div class="contactContainer">

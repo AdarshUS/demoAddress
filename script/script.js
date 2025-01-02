@@ -1,3 +1,4 @@
+let validInput = true;
 $("#logout").click(function() {
         if (confirm("Are you sure you want to Logout")) {
             $.ajax({
@@ -46,7 +47,7 @@ $("#pdf").click(function() {
 
 function validate()
 {
-	let validInput = true;
+	validInputUser = true;
 	const fullName = document.getElementById("fullName").value;
 	const email = document.getElementById("email").value;
 	const userName = document.getElementById("username").value;
@@ -68,60 +69,60 @@ function validate()
 	if(fullName.trim() === "")
 	{
 		nameError.textContent = "Name cannot be Empty";
-		validInput = false;
+		validInputUser = false;
 	}
 	if(email.trim() === "")
 	{
 		mailError.textContent = "Email cannot be empty";
-		validInput = false;
+		validInputUser = false;
 	}
 	else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
 	{
 		mailError.textContent = "Invalid mail";
-		validInput = false;
+		validInputUser = false;
 	}			
 	if(userName.trim() === "")
 	{
 		usernameError.textContent = "Username cannot be empty";
-		validInput = false;
+		validInputUser = false;
 	}
 	else if(!/^[a-z0-9_.]+$/.test(userName))
 	{
 		usernameError.textContent = "Invalid Username";
-		validInput = false;
+		validInputUser = false;
 	}
 	if(password.trim() === "")
 	{
 		passwordError.textContent = "Password cannot be empty";
-		validInput = false;
+		validInputUser = false;
 	}
 	else if( password.search(/[a-z]/) < 0)
 	{
 		passwordError.textContent = "Password should contain Atleast one lowercase";
-		validInput = false;
+		validInputUser = false;
 	}
 	else if( password.search(/[A-Z]/) < 0)
 	{
 		passwordError.textContent = "Password should contain Atleast one Uppercase";
-		validInput = false;
+		validInputUser = false;
 	}
 	else if(password.search(/[0-9]/) < 0)
 	{
 		passwordError.textContent = "Password should contain Atleast one Digit";
-		validInput = false;
+		validInputUser = false;
 	}
 	else if(password.length<6)
 	{
 		passwordError.textContent = "Password should contain Atleast Six characters";
-		validInput = false;
+		validInputUser = false;
 	}
 	if(password != confirmPassword)
 	{
 		passwordMatchError.textContent = "Password does'nt match";
-		validInput = false;
+		validInputUser = false;
 	}
   
-	return validInput;
+	return validInputUser;
 }
 
 document.getElementById("excelForm").addEventListener("submit", function (event) {
@@ -207,12 +208,12 @@ function deleteContact(contactId)
 
 function validateContact()
 {	
+	
 	let title = document.getElementById("title").value;	
 	let firstName = document.getElementById("firstName").value;
 	let lastName = document.getElementById("lastName").value;
 	let gender = document.getElementById("gender").value;
-	let dateOfBirth = document.getElementById("dob").value;
-	let photo = document.getElementById("photo").value;
+	let dateOfBirth = document.getElementById("dob").value;	
 	let address = document.getElementById("address").value;
 	let street = document.getElementById("street").value;
 	let district = document.getElementById("district").value;
@@ -234,8 +235,7 @@ function validateContact()
 	let districtError = document.getElementById("districtError");
 	let stateError = document.getElementById("stateError");
 	let nationalityError = document.getElementById("nationalityError");
-	let pincodeError = document.getElementById("pincodeError");
-	let emailError = document.getElementById("emailError");
+	let pincodeError = document.getElementById("pincodeError");	
 	let phoneError = document.getElementById("phoneError");
 	let roleError = document.getElementById("RoleError"); 
 
@@ -327,12 +327,14 @@ function validateContact()
 	if(role.trim() === "")
 	{
 		roleError.innerHTML = "select any Role"
-	}	
+	}
+	     
 	return validInput;
 }
 
 function editContact(contactId)
 {
+	validInput = true;
 	$("#select").val("").trigger("chosen:updated");
 	let titleError = document.getElementById("titleError");
 	let firstNameError = document.getElementById("firstNameError");
@@ -381,11 +383,12 @@ function editContact(contactId)
             option.selected = true;
 				$("#select").trigger("chosen:updated");	
 			 }			
-		});		   
+		});
+		let validGender = jsonObj.GENDER.toLowerCase();		
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
-			document.getElementById(jsonObj.GENDER).selected = true;
+			document.getElementById(validGender).selected = true;
 			document.getElementById("dob").value = jsonObj.DATEOFBIRTH;			
 			document.getElementById("address").value = jsonObj.ADDRESS;
 			document.getElementById("street").value = jsonObj.STREET;
@@ -406,7 +409,8 @@ function editContact(contactId)
 }
 
 function createContact()
-{	
+{
+	validInput = true;
 	$(".error").text("");	
 	$("#select").val("").trigger("chosen:updated");
 	document.getElementById("createContactText").innerHTML = "CREATE CONTACT";
@@ -476,7 +480,9 @@ function emailValidator(email)
 			else
 			{
 				validInput = true;
+				emailError.innerHTML = ""
 			}
+			
     },
     error: function() {        
     }
