@@ -1,8 +1,6 @@
  <cflogin>
     <cfoauth
-       type="google"
-       clientid=""
-       secretkey=""
+       type="google"       
        result="res"                  
        scope="email profile">
     </cfoauth>
