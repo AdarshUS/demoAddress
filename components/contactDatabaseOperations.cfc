@@ -400,5 +400,25 @@
    </cfif>
    <cfreturn compare(local.value1,local.value2)>
 </cffunction>
+
+<cffunction name="checkExistingContacts" access="remote" returntype="boolean" returnformat="JSON">
+    <cfargument name="emailId" >      
+    <cfargument name="contactId" >    
+    <cfquery name="local.existingContacts">
+        SELECT 
+            *
+        FROM
+            Contact
+        WHERE 
+            emailId = <cfqueryparam  value="#arguments.emailId#" cfsqltype="cf_sql_varchar">           
+            AND _createdBy = <cfqueryparam  value="#session.userId#" cfsqltype="cf_sql_integer"> 
+            AND active = <cfqueryparam  value="1" cfsqltype="cf_sql_integer">
+            AND NOT contactId = <cfqueryparam  value="#arguments.contactId#" cfsqltype="cf_sql_varchar">
+    </cfquery>    
+    <cfif local.existingContacts.RecordCount>
+        <cfreturn true>
+    </cfif>
+    <cfreturn false>
+</cffunction>
    
 </cfcomponent>

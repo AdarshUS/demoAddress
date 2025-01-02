@@ -251,7 +251,6 @@ function validateContact()
 	stateError.innerHTML = "";
 	nationalityError.innerHTML = "";
 	pincodeError.innerHTML = "";
-	emailError.innerHTML = "";
 	phoneError.innerHTML = "";
 	roleError.innerHTML = "";
 	
@@ -319,11 +318,7 @@ function validateContact()
 		pincodeError.innerHTML = "pincode required"
 		validInput = false;
 	}
-	if(email.trim() === "")
-	{
-		emailError.innerHTML = "email required"
-		validInput = false;
-	}
+	
 	if(phone.trim() === "")
 	{
 		phoneError.innerHTML = "phone required"
@@ -353,6 +348,7 @@ function editContact(contactId)
 	let pincodeError = document.getElementById("pincodeError");
 	let emailError = document.getElementById("emailError");
 	let phoneError = document.getElementById("phoneError");
+	let roleError = document.getElementById("RoleError");
 
 	titleError.innerHTML = "";
 	firstNameError.innerHTML = "";
@@ -368,6 +364,7 @@ function editContact(contactId)
 	pincodeError.innerHTML = "";
 	emailError.innerHTML = "";
 	phoneError.innerHTML = "";
+	roleError.innerHTML = "";
   
 	$.ajax({		
    	 url: 'components/contactDatabaseOperations.cfc?method=fetchSingleContact',
@@ -388,7 +385,7 @@ function editContact(contactId)
          document.getElementById("title").value = jsonObj.TITLE;
 			document.getElementById("firstName").value = jsonObj.FIRSTNAME;
 			document.getElementById("lastName").value = jsonObj.LASTNAME;
-			document.getElementById("gender").value = jsonObj.GENDER;
+			document.getElementById(jsonObj.GENDER).selected = true;
 			document.getElementById("dob").value = jsonObj.DATEOFBIRTH;			
 			document.getElementById("address").value = jsonObj.ADDRESS;
 			document.getElementById("street").value = jsonObj.STREET;
@@ -453,4 +450,38 @@ $("#uploadBtn").click(function() {
    document.getElementById("downloadIcon").style.display = "none";
 	document.getElementById("excelForm").reset();
 });
+
+function emailValidator(email)
+{
+	let emailError = document.getElementById("emailError");
+	if(email.value.trim() === "")
+	{
+		emailError.innerHTML = "email required"
+		validInput = false;
+	}
+	else{
+		let contactId = document.getElementById("distinguishButtons").value;
+		$.ajax({
+    	url: 'components/contactDatabaseOperations.cfc?method=checkExistingContacts',
+    	type: 'POST',
+		data: {emailId:email.value,contactId:contactId},
+    	success: function(existString) {
+			let exist = existString === "true"?true:false
+			if(exist)
+			{
+				console.log(exist)
+				emailError.innerHTML = "Email Already Exist"
+				validInput = false;
+			}
+			else
+			{
+				validInput = true;
+			}
+    },
+    error: function() {        
+    }
+	});		           
+	}
+	
+}
 

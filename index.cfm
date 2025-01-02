@@ -60,7 +60,7 @@
                   <cfset session.userId = result.userid>
                   <cfset session.profilePhoto = result.profilePhoto>
                   <cfset session.fullName = result.fullName>                  
-                  <cflocation url="./homePage.cfm" >                  
+                  <cflocation url="./homePage.cfm"  addtoken="no">                  
                <cfelse>
                   <p class="error">Incorrect UserName or Password</p>
                </cfif>

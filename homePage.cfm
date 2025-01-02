@@ -80,9 +80,9 @@
 													<td colspan="2">
 														<select name="gender" id="gender">
 															<option value="notSelect"></option>
-															<option value="male">Male</option>
-															<option value="female">Female</option>
-															<option value="other">Other</option>													
+															<option value="male" id="male">Male</option>
+															<option value="female" id="female">Female</option>
+															<option value="other" id="other">Other</option>													
 														</select>
 														<div id="genderError" class="error"></div>
 													</td>
@@ -161,11 +161,11 @@
 												</tr>
 												<tr>
 													<td>
-														<input type="email" name="email" id="email" placeholder="Your Email">
+														<input type="email" name="email" id="email" placeholder="Your Email" onkeyup="emailValidator(this)">
 														<div id="emailError" class="error"></div>
 													</td>
 													<td>
-														<input type="text" name="phone" id="phone" placeholder="Your Phone Number">
+														<input type="text" name="phone" id="phone" placeholder="Your Phone Number" >
 														<div id="phoneError" class="error"></div>
 													</td>
 												</tr>												
@@ -178,7 +178,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="refreshSelector()">Close</button>
-								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>;								
+								<button type="submit" class="btn btn-primary" id="submit" name="submit">Create</button>
 							</div>							
 						</div>
 						</form>
@@ -308,7 +308,7 @@
 					<cfif NOT result>
 						<p>Contact Already Exists</p>						
 					<cfelse>
-						<cflocation  url="./homePage.cfm">
+						<cflocation  url="./homePage.cfm" addtoken="no">
 					</cfif>					
 				</cfif>																			
 			</cfif>
